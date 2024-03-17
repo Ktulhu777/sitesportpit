@@ -6,6 +6,7 @@ from .serializers import ProductSerializer
 
 
 class ProductViewSet(viewsets.ModelViewSet):
+    """Клас для просмотра списка товаров либо просмотр одного"""
     serializer_class = ProductSerializer
 
     def get_queryset(self):
