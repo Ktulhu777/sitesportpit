@@ -1,11 +1,11 @@
 
 from django.http import HttpResponse
-from rest_framework import viewsets
+from rest_framework import viewsets, generics
 from .models import Product
 from .serializers import ProductSerializer
 
 
-class ProductViewSet(viewsets.ModelViewSet):
+class ProductViewSet(generics.ListAPIView):
     """Клас для просмотра списка товаров либо просмотр одного"""
     serializer_class = ProductSerializer
 
