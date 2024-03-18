@@ -51,6 +51,7 @@ class Product(models.Model):
 
 
 class CategoryProduct(models.Model):
+    """Основная модель категорий"""
     cat_name = models.CharField(max_length=255, db_index=True, verbose_name='Категория')
     slug = models.SlugField(max_length=255, unique=True, verbose_name='Slug (Формируется автоматически)')
 

@@ -7,13 +7,14 @@ from rest_framework.pagination import PageNumberPagination
 
 
 class ProductPagination(PageNumberPagination):
+    """Класс пагинации"""
     page_size = 9
-    page_size_query_param = 'page_size'
+    page_size_query_param = 'page_size'  # пользователь сам регулирует вывод товаров &page_size=
     max_page_size = 100
 
 
 class ProductView(generics.ListAPIView):
-    """Клас для просмотра списка товаров либо просмотр одного"""
+    """Класс для просмотра списка товаров либо просмотр одного"""
     serializer_class = ProductSerializer
     pagination_class = ProductPagination
 
@@ -25,6 +26,7 @@ class ProductView(generics.ListAPIView):
 
 
 class SearchProduct(generics.ListAPIView):
+    """Класс для для поиска товаров"""
     serializer_class = ProductSerializer
 
     def get_queryset(self):
@@ -32,9 +34,11 @@ class SearchProduct(generics.ListAPIView):
 
 
 class CategoryProductView(generics.ListAPIView):
+    """Класс категорий"""
     serializer_class = CategorySerializer
 
     def get_queryset(self):
+        """Функция выводит все категории(у которых есть 1 и больше записей) если не указан после '/' slug"""
         slug = self.kwargs.get('slug')
         if not slug:
             return CategoryProduct.objects.annotate(total=Count("posts")).filter(total__gt=0)
