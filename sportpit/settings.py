@@ -25,6 +25,7 @@ SECRET_KEY = 'django-insecure-$cqq_02b5_pv^z8%6(y7@#ad_(*%2^i5^0h1qo7lbnhs9*e)2v
 DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1']
+INTERNAL_IPS = ["127.0.0.1"]
 
 # Application definition
 
@@ -40,6 +41,7 @@ INSTALLED_APPS = [
     'djoser',
     'product.apps.ProductConfig',
     'users.apps.UsersConfig',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -50,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'sportpit.urls'
