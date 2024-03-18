@@ -138,6 +138,9 @@ REST_FRAMEWORK = {
     ],
 }
 
+MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = '/media/'
+
 # LOGIN_REDIRECT_URL = 'home'
 # LOGOUT_REDIRECT_URL = 'users:login'
 # LOGIN_URL = 'users:login'
