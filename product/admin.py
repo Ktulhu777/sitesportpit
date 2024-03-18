@@ -14,6 +14,7 @@ class ProductModel(admin.ModelAdmin):
 
     @admin.display(description="Изображение", ordering='content')
     def post_photo(self, product: Product):
+        """Функция вывода изображения, если оно есть"""
         if product.photo:
             return mark_safe(f"<img src='{product.photo.url}' width=50>")
         return "Без фото"
@@ -22,4 +23,4 @@ class ProductModel(admin.ModelAdmin):
 @admin.register(CategoryProduct)
 class CategoryProductAdmin(admin.ModelAdmin):
     fields = ('cat_name', 'slug',)
-    prepopulated_fields = {"slug": ("cat_name",)}
+    prepopulated_fields = {"slug": ("cat_name",)}  # автоматически формирует слаг на основе cat_name
