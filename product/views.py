@@ -3,11 +3,19 @@ from django.http import HttpResponse
 from rest_framework import generics
 from .models import Product, CategoryProduct
 from .serializers import ProductSerializer, CategorySerializer
+from rest_framework.pagination import PageNumberPagination
+
+
+class ProductPagination(PageNumberPagination):
+    page_size = 9
+    page_size_query_param = 'page_size'
+    max_page_size = 100
 
 
 class ProductViewSet(generics.ListAPIView):
     """Клас для просмотра списка товаров либо просмотр одного"""
     serializer_class = ProductSerializer
+    pagination_class = ProductPagination
 
     def get_queryset(self):
         slug = self.kwargs.get('slug')
