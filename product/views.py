@@ -12,7 +12,7 @@ class ProductPagination(PageNumberPagination):
     max_page_size = 100
 
 
-class ProductViewSet(generics.ListAPIView):
+class ProductView(generics.ListAPIView):
     """Клас для просмотра списка товаров либо просмотр одного"""
     serializer_class = ProductSerializer
     pagination_class = ProductPagination
