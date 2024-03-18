@@ -27,9 +27,9 @@ class Product(models.Model):
     #                           blank=True, null=True, verbose_name="Фото")
     time_create = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     time_update = models.DateTimeField(auto_now=True, verbose_name='Дата обновления статьи')
-
     cat = models.ForeignKey('CategoryProduct', on_delete=models.CASCADE, null=True,
                             related_name='posts', verbose_name="Категории")
+    quantity = models.PositiveIntegerField(default=0, verbose_name='Количество')
     # tags = models.ManyToManyField('Tags', blank=True, related_name='tags', verbose_name="Теги")
 
     objects = models.Manager()
