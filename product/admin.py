@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
-
 from .models import Product, CategoryProduct
 
 
@@ -8,9 +7,9 @@ from .models import Product, CategoryProduct
 class ProductModel(admin.ModelAdmin):
     fields = ('title', 'content', 'photo', 'post_photo', 'is_published', 'price', 'cat')
     ordering = ('-time_create', 'title',)
-    readonly_fields = ('post_photo', )
+    readonly_fields = ('post_photo',)
     list_display = ('title', 'post_photo', 'time_create', 'is_published', 'cat')
-    list_display_links = ('title', )
+    list_display_links = ('title',)
     save_on_top = True
 
     @admin.display(description="Изображение", ordering='content')
