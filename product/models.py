@@ -23,8 +23,8 @@ class Product(models.Model):
     is_published = models.BooleanField(default=Status.PUBLISHED)
     price = models.DecimalField(max_digits=10, decimal_places=2,
                                 blank=True, default=100, verbose_name='Цена')
-    # photo = models.ImageField(upload_to="photos/%Y/%m/%d/", default=None,
-    #                           blank=True, null=True, verbose_name="Фото")
+    photo = models.ImageField(upload_to="photos/%Y/%m/%d/", default=None,
+                               blank=True, null=True, verbose_name="Фото")
     time_create = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     time_update = models.DateTimeField(auto_now=True, verbose_name='Дата обновления статьи')
     cat = models.ForeignKey('CategoryProduct', on_delete=models.CASCADE, null=True,
