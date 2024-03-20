@@ -1,5 +1,4 @@
 from rest_framework.viewsets import ModelViewSet
-
 from .serializers import UserSerializer
 from .permissions import UserPermission
 from .models import User

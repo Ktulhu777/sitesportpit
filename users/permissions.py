@@ -25,4 +25,3 @@ class UserPermission(permissions.BasePermission):
             return request.user.is_staff
         else:
             return False
-

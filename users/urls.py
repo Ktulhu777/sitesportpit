@@ -1,16 +1,18 @@
 from django.urls import path, include
-from django.contrib import admin
 from rest_framework import routers
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 from .views import UserViewSet
 
-router = routers.DefaultRouter()
+
+router = routers.SimpleRouter()
 router.register('users', UserViewSet)
-
-
 # app_name = "users"
 
-urlpatterns = [
-    path('api/', include(router.urls)),
-    path('api-auth/', include('rest_framework.urls')),
 
+urlpatterns = [  # ↓ http://127.0.0.1:8000/user/api/users/ ↓
+    path('api/', include(router.urls)),  # => registration user, form: username, password
+    path('api-auth/', include('rest_framework.urls')),  # => in end_url /login/ or  /logout/
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # give jwt-token - access and refresh
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),  # give access token by refresh
+    path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),  # unknown
 ]
