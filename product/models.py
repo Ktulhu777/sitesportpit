@@ -64,7 +64,7 @@ class CategoryProduct(models.Model):
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
 
-## => В ОБДУМКЕ !
+# => В ОБДУМКЕ !
 # class Review(models.Model):
 #     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='product')
 #     review = models.TextField(blank=True, verbose_name='Отзыв', null=True)
