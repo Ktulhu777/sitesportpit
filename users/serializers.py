@@ -6,17 +6,15 @@ from django.contrib.auth.password_validation import validate_password
 
 
 class UserSerializer(serializers.ModelSerializer):
-    phone_number = serializers.CharField(label='Номер телефона')
     email = serializers.CharField(label='Электронная почта')
 
     class Meta:
         model = get_user_model()
-        fields = ['username', 'phone_number', 'email', 'password']
+        fields = ['username', 'email', 'password']
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
         user = User(username=validated_data['username'],
-                    phone_number=validated_data['phone_number'],
                     email=validated_data['email'])
         user.set_password(validated_data['password'])
         user.save()
