@@ -3,7 +3,7 @@ from django.db import models
 
 
 class User(AbstractUser):
-    pass
+    date_joined = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания учетной записи')
     # class Genders(models.TextChoices):
     #     MALE = 'M', 'Мужчина'
     #     FEMALE = 'F', 'Женщина'
