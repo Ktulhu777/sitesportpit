@@ -2,7 +2,7 @@ import os
 from datetime import timedelta
 from pathlib import Path
 import environ
-
+### ЭТО МОИ ИЗМЕНЕНИЯ
 env = environ.Env()
 environ.Env.read_env(env_file=Path('./docker/env/.env.prod'))
 
