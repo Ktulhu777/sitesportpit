@@ -94,32 +94,32 @@ WSGI_APPLICATION = 'sportpit.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'sitesportpit_db',
-#         'USER': 'sitesportpit',
-#         'PASSWORD': '1234',
-#         'HOST': 'localhost',
-#         'POST': 8080,
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': "django.db.backends.postgresql",
-        'NAME': 'sitewomen_db',
-        'USER': 'sitewomen',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'sitesportpit_db',
+        'USER': 'sitesportpit',
         'PASSWORD': '1234',
         'HOST': 'localhost',
-        'PORT': 5433,
+        'POST': 8080,
     }
-
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
-    # }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': "django.db.backends.postgresql",
+#         'NAME': 'sitewomen_db',
+#         'USER': 'sitewomen',
+#         'PASSWORD': '1234',
+#         'HOST': 'localhost',
+#         'PORT': 5433,
+#     }
+#
+#     # 'default': {
+#     #     'ENGINE': 'django.db.backends.sqlite3',
+#     #     'NAME': BASE_DIR / 'db.sqlite3',
+#     # }
+# }
 
 # DATABASES = {
 #     'default': {
