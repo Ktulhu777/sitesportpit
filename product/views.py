@@ -21,12 +21,12 @@ class ProductView(generics.ListAPIView):
     def get_queryset(self):
         slug = self.kwargs.get('slug')
         if not slug:
-            return Product.objects.all()
-        return Product.objects.filter(slug=slug)
+            return Product.published.all()
+        return Product.published.filter(slug=slug)
 
 
 class SearchProduct(generics.ListAPIView):
-    """Класс для для поиска товаров"""
+    """Класс для поиска товаров"""
     serializer_class = ProductSerializer
 
     def get_queryset(self):
