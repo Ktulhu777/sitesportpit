@@ -3,7 +3,7 @@ from .models import Product, CategoryProduct, Review
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    cat = serializers.CharField()
+    category = serializers.CharField()
 
     class Meta:
         model = Product
