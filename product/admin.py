@@ -5,10 +5,10 @@ from .models import Product, CategoryProduct, Review
 
 @admin.register(Product)
 class ProductModel(admin.ModelAdmin):
-    fields = ('name', 'description', 'img', 'product_img', 'is_published', 'price', 'discount', 'cat', 'quantity')
+    fields = ('name', 'description', 'img', 'product_img', 'is_published', 'price', 'discount', 'category', 'quantity')
     ordering = ('-time_create', 'name',)
     readonly_fields = ('product_img',)
-    list_display = ('name', 'product_img', 'time_create', 'is_published', 'cat')
+    list_display = ('name', 'product_img', 'time_create', 'is_published', 'category')
     list_display_links = ('name',)
     save_on_top = True
 

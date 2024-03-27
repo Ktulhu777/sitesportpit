@@ -23,13 +23,13 @@ class Product(models.Model):
     description = models.TextField(blank=True, verbose_name='Описание')
     is_published = models.BooleanField(default=Status.PUBLISHED)
     price = models.FloatField(blank=True, default=100, verbose_name='Цена')
-    discount = models.PositiveIntegerField(blank=True, verbose_name='Скидка', null=True)
+    discount = models.PositiveIntegerField(blank=True, default=0, verbose_name='Скидка', null=True)
     img = models.ImageField(upload_to="photos/%Y/%m/%d/", default=None,
                             blank=True, null=True, verbose_name="img")
     time_create = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     time_update = models.DateTimeField(auto_now=True, verbose_name='Дата обновления статьи')
-    cat = models.ForeignKey('CategoryProduct', on_delete=models.CASCADE, null=True,
-                            related_name='product', verbose_name="Категории")
+    category = models.ForeignKey('CategoryProduct', on_delete=models.CASCADE, null=True,
+                                 related_name='product', verbose_name="Категории")
     quantity = models.PositiveIntegerField(default=0, verbose_name='Количество')
 
     objects = models.Manager()
@@ -46,7 +46,9 @@ class Product(models.Model):
 
     @property
     def discount_price(self):
-        return round(self.price - (self.price / 100 * self.discount), 2)
+        if self.discount:
+            return round(self.price - (self.price / 100 * self.discount), 2)
+        return None
 
     class Meta:
         verbose_name = 'Товар'
