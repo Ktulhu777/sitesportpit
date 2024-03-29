@@ -4,11 +4,16 @@ from .models import Product, CategoryProduct, Review
 
 class ProductSerializer(serializers.ModelSerializer):
     category = serializers.CharField()
+    img = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
         fields = ('id', 'name', 'description', 'img', 'price', 'discount',
                   'discount_price', 'time_create', 'category', 'avg_rating',)
+
+    def get_img(self, obj):
+        if obj.img:
+            return obj.img.url
 
 
 class CategorySerializer(serializers.ModelSerializer):
