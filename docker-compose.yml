@@ -16,9 +16,9 @@ services:
     env_file:
       - docker/env/.env.prod
     volumes:
-      - ./:/sitesportpit-back
-      - static:/sitesportpit-back/static
-      - media:/sitesportpit-back/media
+      - ./:/app
+      - static:/app/static
+      - media:/app/media
     depends_on:
       - postgres
       - redis
@@ -29,15 +29,15 @@ services:
 
   nginx:
     container_name: nginx
-    working_dir: /sitesportpit-back
+    working_dir: /app
     image: nginx:stable-alpine
     restart: always
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - static:/sitesportpit-back/static
-      - media:/sitesportpit-back/media
+      - static:/app/static
+      - media:/app/media
       - ./docker/nginx/prod/:/etc/nginx/conf.d:ro
       - ./docker/certbot/conf:/etc/letsencrypt:ro
       - ./docker/certbot/www:/var/www/certbot:ro
