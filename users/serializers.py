@@ -26,7 +26,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class ProfileSerializer(serializers.ModelSerializer, ValidateBasics):
     # phone = serializers.CharField(required=False, max_length=14, help_text="Формат номера: +7(XXX)-XXX-XX-XX")
-    date_birth = serializers.DateTimeField(required=False, input_formats=None)
+    date_birth = serializers.DateField(required=False, input_formats=None)
 
     class Meta:
         model = get_user_model()
