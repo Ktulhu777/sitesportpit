@@ -1,13 +1,14 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from .models import User
-from rest_framework.validators import ValidationError
-from django.contrib.auth.password_validation import validate_password
+from .validators import ValidateBasics
 
 
 class UserSerializer(serializers.ModelSerializer):
+    help_text = "Обязательное уникальное поле. Не более 20 символов. Только буквы, цифры и символ ' _ ' "
+
     username = serializers.CharField(min_length=2, max_length=20,
-                                     help_text="Обязательное уникальное поле. Не более 20 символов. Только буквы, цифры и символ ' _ ' ")
+                                     help_text=help_text)
     email = serializers.CharField(min_length=8, max_length=30, label='Электронная почта')
 
     class Meta:
@@ -22,16 +23,12 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
-    def validate_phone_number(self, attrs):
-        if get_user_model().objects.filter(phone_number=attrs).exists():
-            raise ValidationError("Такой номер телефона уже существует")
-        return attrs
 
-    def validate_email(self, attrs):
-        if get_user_model().objects.filter(email=attrs).exists():
-            raise ValidationError("Такой E-mail уже существует")
-        return attrs
+class ProfileSerializer(serializers.ModelSerializer, ValidateBasics):
+    # phone = serializers.CharField(required=False, max_length=14, help_text="Формат номера: +7(XXX)-XXX-XX-XX")
+    date_birth = serializers.DateTimeField(required=False, input_formats=None)
 
-    def validate_password(self, attrs):
-        if validate_password(attrs) is None:
-            return attrs
+    class Meta:
+        model = get_user_model()
+        fields = ["id", "username", "first_name", "last_name", "email", "date_birth", "city"]
+        read_only_fields = ("id", "username", "email")

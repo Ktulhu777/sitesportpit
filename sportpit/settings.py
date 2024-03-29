@@ -165,9 +165,9 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
     ],
 
-    'DEFAULT_PARSER_CLASSES': [
-        'rest_framework.parsers.JSONParser',
-    ],
+    # 'DEFAULT_PARSER_CLASSES': [
+    #     'rest_framework.parsers.JSONParser',
+    # ],
 
     'DEFAULT_AUTHENTICATION_CLASSES': [  # настройки авторизации и регистрации
         'rest_framework.authentication.BasicAuthentication',
