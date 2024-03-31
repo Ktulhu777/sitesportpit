@@ -15,3 +15,4 @@ class ProfileView(generics.RetrieveUpdateDestroyAPIView):
         username = self.kwargs.get("username")
         if self.request.user.username == username:
             return get_user_model().objects.filter(username=username)
+#test
