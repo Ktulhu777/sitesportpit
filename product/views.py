@@ -34,29 +34,44 @@ class ProductDetailView(APIView):
         return Response({"product": ProductSerializer(product, many=True).data,
                          "review": ReviewSerializer(review, many=True).data})
 
-    def post(self, request, post_slug):
-        serializer = ReviewSerializer(data=request.data)
-        serializer.initial_data["product_review"] = Product.published.get(slug=post_slug).pk
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
+    def post(self, request, product_slug):
+        try:
+            product = Product.published.get(slug=product_slug)
+            request.data["product_review"] = product.pk
+            serializer = ReviewSerializer(data=request.data, context={"request": request})
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
 
-        return Response({"review": serializer.data})
+            return Response({"review": serializer.data})
+        except:
+            return Response({"error": "отзыв не добавлен"})
 
     def put(self, request, *args, **kwargs):
         pk = kwargs.get('pk', None)
         if not pk:
             return Response({"error": "Данного отзыва не существует"})
-
         try:
             instance = Review.objects.get(pk=pk)
         except:
             return Response({"error": "Данного отзыва не существует"})
 
-        serializer = ReviewSerializer(data=request.data, instance=instance)
+        serializer = ReviewSerializer(data=request.data, instance=instance, context={"request": request})
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
         return Response({"review": serializer.data})
+
+    def delete(self, request, *args, **kwargs):
+        pk = kwargs.get('pk', None)
+        if not pk:
+            return Response({"error": "Данного отзыва не существует"})
+        try:
+            instance = Review.objects.get(pk=pk)
+        except:
+            return Response({"error": "Данного отзыва не существует"})
+
+        instance.delete()
+        return Response({"review": "Отзыв успешно удален"})
 
 
 class SearchProduct(generics.ListAPIView):
