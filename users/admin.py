@@ -5,4 +5,5 @@ from .models import User
 
 @admin.register(User)
 class UserAdmin(UserAdmin):
-    readonly_fields = ('date_joined',)
+    readonly_fields = ('date_joined', )
+    

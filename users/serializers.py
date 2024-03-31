@@ -25,10 +25,10 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class ProfileSerializer(serializers.ModelSerializer, ValidateBasics):
-    # phone = serializers.CharField(required=False, max_length=14, help_text="Формат номера: +7(XXX)-XXX-XX-XX")
-    date_birth = serializers.DateField(required=False, input_formats=None)
+    phone = serializers.CharField(required=False, help_text=ValidateBasics.help_text_phone)
+    date_birth = serializers.DateTimeField(required=False, input_formats=None)
 
     class Meta:
         model = get_user_model()
-        fields = ["id", "username", "first_name", "last_name", "email", "date_birth", "city"]
+        fields = ["id", "username", "first_name", "last_name", "email", "date_birth", "city", "phone"]
         read_only_fields = ("id", "username", "email")

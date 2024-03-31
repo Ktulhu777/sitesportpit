@@ -96,5 +96,3 @@ class CategoryProductView(generics.ListAPIView):
 
 def home(request):
     return HttpResponse('<h1>Главная пробная старница</h1>')
-
-#test
