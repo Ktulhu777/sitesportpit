@@ -3,7 +3,7 @@ from datetime import timedelta
 from pathlib import Path
 import environ
 
-# я заебался сильно  послание от Адамa к Вове
+# ВСЕ РАБОТАЕТ ВОВА
 env = environ.Env()
 environ.Env.read_env(env_file=Path('./docker/env/.env.prod'))
 
