@@ -34,6 +34,7 @@ class ReviewSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         instance.review = validated_data.get("review", instance.review)
+        instance.rating = validated_data.get("rating", instance.rating)
         instance.changes = True
         instance.save()
         return instance
