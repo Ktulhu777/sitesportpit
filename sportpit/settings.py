@@ -3,7 +3,6 @@ from datetime import timedelta
 from pathlib import Path
 import environ
 
-# ВСЕ РАБОТАЕТ ВОВА
 env = environ.Env()
 environ.Env.read_env(env_file=Path('./docker/env/.env.prod'))
 
@@ -258,28 +257,23 @@ MEDIA_URL = '/media/'
 DEFAULT_USER_IMAGE = MEDIA_URL + 'users/default.png'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = "smtp.beget.com"
-EMAIL_PORT = 465
-EMAIL_USE_SSL = True
-EMAIL_HOST_USER = "project-pit@project-pit.ru"
-EMAIL_HOST_PASSWORD = "Kalaytanov_93"
 
+# EMAIL_HOST="smtp.yandex.ru"
+# EMAIL_PORT=465
+# EMAIL_USE_SSL=1
+# EMAIL_HOST_USER="kalaitanov93@yandex.ru"
+# EMAIL_HOST_PASSWORD="vwtirwwxurbbwyjv"
+
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_PORT = env('EMAIL_PORT')
+EMAIL_USE_SSL = int(env('EMAIL_USE_SSL', default=1))
+
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+
+EMAIL_SERVER = EMAIL_HOST_USER
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-SERVER_EMAIL = EMAIL_HOST_USER
-EMAIL_ADMIN = EMAIL_HOST_USER
-
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-#
-# EMAIL_HOST = env('EMAIL_HOST')
-# EMAIL_PORT = env('EMAIL_PORT')
-# EMAIL_USE_TLS = int(env('EMAIL_USE_TLS', default=1))
-#
-# EMAIL_HOST_USER = env('EMAIL_HOST_USER')
-# EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
-#
-# EMAIL_SERVER = EMAIL_HOST_USER
-# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-# EMAIL_ADMIN = list(EMAIL_HOST_USER)
+EMAIL_ADMIN = list(EMAIL_HOST_USER)
 
 # Другие параметры
 
