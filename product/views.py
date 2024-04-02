@@ -1,6 +1,6 @@
 from django.db.models import Count, Avg
 from django.http import HttpResponse
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.views import APIView
 from .models import Product, CategoryProduct, Review
 from .serializers import ProductSerializer, CategorySerializer, ReviewSerializer
@@ -23,11 +23,11 @@ class ProductAllView(generics.ListAPIView):
     pagination_class = ProductPagination
 
 
-class ProductDetailView(APIView):
+class ProductDetailView(APIView, IsOwnerOrReadOnly):
     """Класс для просмотра товара и отзывов на одной странице """
-    permission_classes = (IsOwnerOrReadOnly, )
+    permission_classes = IsOwnerOrReadOnly,
 
-    def get(self, request, product_slug=None):
+    def get(self, request, product_slug):
         product = Product.published.annotate(_avg_rating=Avg('review__rating')).filter(slug=product_slug)
         review = Review.objects.filter(product_review__slug=product_slug).select_related('user')
 
@@ -42,24 +42,27 @@ class ProductDetailView(APIView):
             serializer.is_valid(raise_exception=True)
             serializer.save()
 
-            return Response({"review": serializer.data})
+            return Response({"review": serializer.data}, status=status.HTTP_200_OK)
         except:
-            return Response({"error": "отзыв не добавлен"})
+            return Response({"error": "отзыв не добавлен"}, status=status.HTTP_401_UNAUTHORIZED)
 
     def put(self, request, *args, **kwargs):
         pk = kwargs.get('pk', None)
+
         if not pk:
             return Response({"error": "Данного отзыва не существует"})
+
         try:
             instance = Review.objects.get(pk=pk)
+            self.check_object_permissions(request, instance)
         except:
-            return Response({"error": "Данного отзыва не существует"})
+            return Response({"detail": "Данный отзыв нельзя изменить"}, status=status.HTTP_403_FORBIDDEN)
 
         serializer = ReviewSerializer(data=request.data, instance=instance, context={"request": request})
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
-        return Response({"review": serializer.data})
+        return Response({"review": serializer.data}, status=status.HTTP_200_OK)
 
     def delete(self, request, *args, **kwargs):
         pk = kwargs.get('pk', None)
@@ -67,11 +70,12 @@ class ProductDetailView(APIView):
             return Response({"error": "Данного отзыва не существует"})
         try:
             instance = Review.objects.get(pk=pk)
+            self.check_object_permissions(request, instance)
         except:
-            return Response({"error": "Данного отзыва не существует"})
+            return Response({"detail": "Данный отзыв нельзя удалить"}, status=status.HTTP_403_FORBIDDEN)
 
         instance.delete()
-        return Response({"review": "Отзыв успешно удален"})
+        return Response({"review": "Отзыв успешно удален"}, status=status.HTTP_200_OK)
 
 
 class SearchProduct(generics.ListAPIView):
