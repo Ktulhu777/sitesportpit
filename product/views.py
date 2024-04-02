@@ -23,11 +23,11 @@ class ProductAllView(generics.ListAPIView):
     pagination_class = ProductPagination
 
 
-class ProductDetailView(APIView):
+class ProductDetailView(APIView, IsOwnerOrReadOnly):
     """Класс для просмотра товара и отзывов на одной странице """
-    permission_classes = (IsOwnerOrReadOnly, )
+    permission_classes = IsOwnerOrReadOnly,
 
-    def get(self, request, product_slug=None):
+    def get(self, request, product_slug):
         product = Product.published.annotate(_avg_rating=Avg('review__rating')).filter(slug=product_slug)
         review = Review.objects.filter(product_review__slug=product_slug).select_related('user')
 
@@ -48,12 +48,19 @@ class ProductDetailView(APIView):
 
     def put(self, request, *args, **kwargs):
         pk = kwargs.get('pk', None)
+
         if not pk:
             return Response({"error": "Данного отзыва не существует"})
+
         try:
             instance = Review.objects.get(pk=pk)
         except:
             return Response({"error": "Данного отзыва не существует"})
+
+        try:
+            self.check_object_permissions(request, instance)
+        except:
+            Response({"detail": "Данный отзыв вам не принадлежит"})
 
         serializer = ReviewSerializer(data=request.data, instance=instance, context={"request": request})
         serializer.is_valid(raise_exception=True)
@@ -68,8 +75,12 @@ class ProductDetailView(APIView):
         try:
             instance = Review.objects.get(pk=pk)
         except:
-            return Response({"error": "Данного отзыва не существует"})
+            return Response({"error2": "Данного отзыва не существует"})
 
+        try:
+            self.check_object_permissions(request, instance)
+        except:
+            Response({"detail": "Данный отзыв вам не принадлежит"})
         instance.delete()
         return Response({"review": "Отзыв успешно удален"})
 
