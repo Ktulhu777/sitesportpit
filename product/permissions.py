@@ -1,5 +1,4 @@
 from rest_framework import permissions
-from .models import Product, Review
 
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
@@ -12,5 +11,7 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         то происходит проверка, имеет ли отношение пользователя к данному объекту класса"""
         if request.method in permissions.SAFE_METHODS:
             return True
+        elif request.method == "POST":
+            return True
+        return request.user == obj.user
 
-        return obj.user == request.user
