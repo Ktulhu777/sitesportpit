@@ -53,8 +53,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_elasticsearch_dsl',
     'product.apps.ProductConfig',
     'users.apps.UsersConfig',
+    'search.apps.SearchConfig',
     'djoser',
     'debug_toolbar',
     'rest_framework',
@@ -281,3 +283,11 @@ EMAIL_ADMIN = list(EMAIL_HOST_USER)
 # RECAPTCHA_PRIVATE_KEY = env('RECAPTCHA_PRIVATE_KEY')
 
 AUTH_USER_MODEL = 'users.User'
+
+ELASTICSEARCH_DSL = {
+    "default": {
+        "hosts": "https://localhost:9200",
+        "http_auth": ("elastic", "2tKCPJkxF6I5hu3ykAcU"),
+        "ca_certs": "../../elasticsearch/config/certs/http_ca.crt",
+    }
+}
