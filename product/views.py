@@ -18,7 +18,7 @@ class ProductPagination(PageNumberPagination):
 
 class ProductAllView(generics.ListAPIView):
     """Класс для просмотра списка товаров с пагинацией """
-    queryset = Product.published.annotate(_avg_rating=Avg('review__rating')).all()
+    queryset = Product.published.annotate(_avg_rating=Avg('review__rating')).all().select_related('category')
     serializer_class = ProductSerializer
     pagination_class = ProductPagination
 
@@ -76,7 +76,6 @@ class ProductDetailView(APIView, IsOwnerOrReadOnly):
 
         instance.delete()
         return Response({"review": "Отзыв успешно удален"}, status=status.HTTP_200_OK)
-
 
 
 class SearchProduct(generics.ListAPIView):
