@@ -22,6 +22,7 @@ services:
     depends_on:
       - postgres
       - redis
+      - elasticsearch
     command: sh -c "python manage.py collectstatic --no-input &&
                     python manage.py makemigrations &&
                     python manage.py migrate &&
@@ -87,7 +88,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 8G
+          memory: 1G
     restart: always
     ports:
       - "9200:9200"
