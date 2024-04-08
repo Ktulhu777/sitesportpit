@@ -74,3 +74,23 @@ services:
       command: certonly --webroot --webroot-path=/var/www/certbot/ --email kalaytanov93@gmail.com --agree-tos --no-eff-email -d project-pit.ru -d www.project-pit.ru
       depends_on:
         - nginx
+
+  elasticsearch:
+    container_name: elasticsearch
+    image: elasticsearch:7.17.19
+    environment:
+      - discovery.type=single-node
+      - cluster.name=es-docker
+      - node.name=node1
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+    restart: always
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - ./docker/elasticsearch/:/elastic

@@ -56,12 +56,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_elasticsearch_dsl',
+    'django_elasticsearch_dsl_drf',
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
     'djoser',
     'product.apps.ProductConfig',
     'users.apps.UsersConfig',
+    'search.apps.SearchConfig',
     'debug_toolbar',
 ]
 
@@ -261,3 +264,13 @@ RECAPTCHA_PUBLIC_KEY = env('RECAPTCHA_PUBLIC_KEY')
 RECAPTCHA_PRIVATE_KEY = env('RECAPTCHA_PRIVATE_KEY')
 
 AUTH_USER_MODEL = 'users.User'
+
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': 'https://elasticsearch:9200'
+    },
+}
+
+ELASTICSEARCH_INDEX_NAMES = {
+    'products.product': 'products',
+}

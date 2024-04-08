@@ -20,7 +20,7 @@ class ProductAllView(generics.ListAPIView):
     """Класс для просмотра списка товаров с пагинацией """
     queryset = Product.published.annotate(_avg_rating=Avg('review__rating')).all()
     serializer_class = ProductSerializer
-    pagination_class = ProductPagination
+    # pagination_class = ProductPagination
 
 
 class ProductDetailView(APIView, IsOwnerOrReadOnly):
