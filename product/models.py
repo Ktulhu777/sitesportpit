@@ -35,8 +35,17 @@ class Product(models.Model):
     objects = models.Manager()
     published = PublishedManager()
 
+    class Meta:
+        verbose_name = 'Товар'
+        verbose_name_plural = 'Товары'
+        ordering = ['-time_create']
+
     def __str__(self):
         return self.name
+
+    @property
+    def get_category(self):
+        return self.category.cat_name
 
     @property
     def avg_rating(self):
@@ -49,11 +58,6 @@ class Product(models.Model):
         if self.discount:
             return round(self.price - (self.price / 100 * self.discount), 2)
         return None
-
-    class Meta:
-        verbose_name = 'Товар'
-        verbose_name_plural = 'Товары'
-        ordering = ['-time_create']
 
     def save(self, *args, **kwargs):
         """Формирует автомачески slug для продукта"""
