@@ -267,7 +267,7 @@ AUTH_USER_MODEL = 'users.User'
 
 ELASTICSEARCH_DSL = {
     'default': {
-        'hosts': 'http://project-pit.ru:9200'
+        'hosts': 'http://elasticsearch:9200'
     },
 }
 
