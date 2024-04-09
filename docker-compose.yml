@@ -22,7 +22,7 @@ services:
     depends_on:
       - postgres
       - redis
-      - elasticsearch
+#      - elasticsearch
     command: sh -c "python manage.py collectstatic --no-input &&
                     python manage.py makemigrations &&
                     python manage.py migrate &&
@@ -76,21 +76,21 @@ services:
       depends_on:
         - nginx
 
-  elasticsearch:
-    container_name: elasticsearch
-    image: elasticsearch:7.17.19
-    environment:
-      - discovery.type=single-node
-      - cluster.name=es-docker
-      - node.name=node1
-      - bootstrap.memory_lock=true
-#      - "ES_JAVA_OPTS=-Xmx512m -Xms512"
-#    deploy:
-#      resources:
-#        limits:
-#          memory: 2G
-    restart: always
-    ports:
-      - "9200:9200"
-    volumes:
-      - ./docker/elasticsearch/:/elastic
+#  elasticsearch:
+#    container_name: elasticsearch
+#    image: elasticsearch:7.17.19
+#    environment:
+#      - discovery.type=single-node
+#      - cluster.name=es-docker
+#      - node.name=node1
+#      - bootstrap.memory_lock=true
+##      - "ES_JAVA_OPTS=-Xmx512m -Xms512"
+##    deploy:
+##      resources:
+##        limits:
+##          memory: 2G
+#    restart: always
+#    ports:
+#      - "9200:9200"
+#    volumes:
+#      - ./docker/elasticsearch/:/elastic
