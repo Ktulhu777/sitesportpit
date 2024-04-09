@@ -84,11 +84,11 @@ services:
       - cluster.name=es-docker
       - node.name=node1
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xmx512m -Xms512"
-    deploy:
-      resources:
-        limits:
-          memory: 2G
+#      - "ES_JAVA_OPTS=-Xmx512m -Xms512"
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 2G
     restart: always
     ports:
       - "9200:9200"
