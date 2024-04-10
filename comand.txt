@@ -1,0 +1,5 @@
+docker compose -f docker-compose.dev.yml up --build
+
+docker exec -it django sh
+
+python manage.py search_index --rebuild

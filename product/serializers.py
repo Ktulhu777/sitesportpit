@@ -8,7 +8,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ('id', 'name', 'description', 'img', 'price', 'discount',
+        fields = ('id', 'name', 'description', 'price', 'img', 'discount',
                   'discount_price', 'time_create', 'category', 'avg_rating',)
 
     def get_img(self, obj):
@@ -23,7 +23,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-    user = serializers.CharField(default=serializers.CurrentUserDefault())
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = Review

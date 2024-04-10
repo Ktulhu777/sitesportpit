@@ -4,7 +4,7 @@ from pathlib import Path
 import environ
 
 env = environ.Env()
-environ.Env.read_env(env_file=Path('./docker/env/.env.prod'))
+environ.Env.read_env(env_file=Path('./docker/env/.env.dev'))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +20,16 @@ SECRET_KEY = 'django-insecure-$cqq_02b5_pv^z8%6(y7@#ad_(*%2^i5^0h1qo7lbnhs9*e)2v
 # DEBUG = int(env('DEBUG', default=1))
 DEBUG = True
 
+
+
 # ALLOWED_HOSTS = env('ALLOWED_HOSTS').split()
 
 # CSRF_TRUSTED_ORIGINS = env('CSRF_TRUSTED_ORIGINS').split()
 
 ALLOWED_HOSTS = ['127.0.0.1']
 INTERNAL_IPS = ["127.0.0.1"]
+CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1', 'http://localhost']
+
 DOMAIN = ""
 # CACHES = {
 #     'default': {
@@ -54,6 +58,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_elasticsearch_dsl',
+    'django_elasticsearch_dsl_drf',
     'product.apps.ProductConfig',
     'users.apps.UsersConfig',
     'search.apps.SearchConfig',
@@ -266,16 +271,16 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_HOST_USER="kalaitanov93@yandex.ru"
 # EMAIL_HOST_PASSWORD="vwtirwwxurbbwyjv"
 
-EMAIL_HOST = env('EMAIL_HOST')
-EMAIL_PORT = env('EMAIL_PORT')
-EMAIL_USE_SSL = int(env('EMAIL_USE_SSL', default=1))
-
-EMAIL_HOST_USER = env('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
-
-EMAIL_SERVER = EMAIL_HOST_USER
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-EMAIL_ADMIN = list(EMAIL_HOST_USER)
+# EMAIL_HOST = env('EMAIL_HOST')
+# EMAIL_PORT = env('EMAIL_PORT')
+# EMAIL_USE_SSL = int(env('EMAIL_USE_SSL', default=1))
+#
+# EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+# EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+#
+# EMAIL_SERVER = EMAIL_HOST_USER
+# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+# EMAIL_ADMIN = list(EMAIL_HOST_USER)
 
 # Другие параметры
 
@@ -285,9 +290,11 @@ EMAIL_ADMIN = list(EMAIL_HOST_USER)
 AUTH_USER_MODEL = 'users.User'
 
 ELASTICSEARCH_DSL = {
-    "default": {
-        "hosts": "https://localhost:9200",
-        "http_auth": ("elastic", "2tKCPJkxF6I5hu3ykAcU"),
-        "ca_certs": "../../elasticsearch/config/certs/http_ca.crt",
-    }
+    'default': {
+        'hosts': 'http://elasticsearch:9200'
+    },
+}
+
+ELASTICSEARCH_INDEX_NAMES = {
+    'products.product': 'products',
 }
