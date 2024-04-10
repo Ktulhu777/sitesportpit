@@ -10,7 +10,7 @@ class ProfileSerializer(serializers.ModelSerializer, ValidateBasics):
 
     class Meta:
         model = get_user_model()
-        fields = ["id", "username", "first_name", "last_name", "email", "date_birth", "city", "phone"]
+        fields = ["id", "user_photo", "username", "first_name", "last_name", "email", "date_birth", "city", "phone"]
         read_only_fields = ("id", "username", "email")
 
 

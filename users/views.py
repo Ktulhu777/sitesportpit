@@ -1,7 +1,5 @@
-from djoser.serializers import PasswordResetConfirmRetypeSerializer
 from djoser.views import UserViewSet
 from rest_framework import status
-from rest_framework.decorators import action
 from rest_framework.response import Response
 
 
@@ -18,5 +16,6 @@ class ActivateUser(UserViewSet):
         try:
             super().activation(request, *args, **kwargs)
             return Response(status=status.HTTP_204_NO_CONTENT)
+
         except:
             return Response(status.HTTP_404_NOT_FOUND)
