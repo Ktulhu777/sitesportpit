@@ -20,12 +20,11 @@ services:
       - static:/app/static
       - media:/app/media
     depends_on:
-      - postgres
-      - redis
+      - elasticsearch
     command: sh -c "python manage.py collectstatic --no-input &&
-                    python manage.py makemigrations &&
-                    python manage.py migrate &&
-                    python manage.py runserver 0.0.0.0:8000"
+      python manage.py makemigrations &&
+      python manage.py migrate &&
+      python manage.py runserver 0.0.0.0:8000"
 
   nginx:
     container_name: nginx
@@ -43,24 +42,27 @@ services:
     depends_on:
       - django
 
-  postgres:
-    image: postgres:alpine
-    container_name: postgres
+  elasticsearch:
+    container_name: elasticsearch
+    image: elasticsearch:7.17.19
+    environment:
+      - discovery.type=single-node
+      - cluster.name=es-docker
+      - node.name=node1
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
+    deploy:
+      resources:
+        limits:
+          memory: 8G # Limited the amount of RAM
     restart: always
-    env_file:
-      - docker/env/.env.dev
+    ports:
+      - "9200:9200"
+      - "9300:9300"
     volumes:
-      - pgdata:/var/lib/postgresql/data/
+      - ./docker/elasticsearch/:/elastic # Volume for data storage
 
-  redis:
-    image: redis:alpine
-    container_name: redis
-    env_file:
-      - docker/env/.env.dev
-    expose:
-      - 6379
-    volumes:
-      - ./docker/redis/data:/data
+
 
 #  celery-worker:
 #    build: .

@@ -24,3 +24,7 @@ COPY . .
 
 # Настройка записи и доступа
 RUN chmod -R 777 ./
+
+# установка vim в среду докер
+#RUN ["apt-get", "update"]
+#RUN ["apt-get", "install", "vim"]

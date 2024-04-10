@@ -1,12 +1,13 @@
-from django.db.models import Count, Avg
+from django.db.models import Count, Avg, Q
 from django.http import HttpResponse
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from .models import Product, CategoryProduct, Review
 from .serializers import ProductSerializer, CategorySerializer, ReviewSerializer
-from rest_framework.pagination import PageNumberPagination
+
 from rest_framework.response import Response
 from .permissions import IsOwnerOrReadOnly
+from django_elasticsearch_dsl_drf.pagination import PageNumberPagination
 
 
 class ProductPagination(PageNumberPagination):
@@ -20,10 +21,10 @@ class ProductAllView(generics.ListAPIView):
     """Класс для просмотра списка товаров с пагинацией """
     queryset = Product.published.annotate(_avg_rating=Avg('review__rating')).all()
     serializer_class = ProductSerializer
-    pagination_class = ProductPagination
+    # pagination_class = ProductPagination
 
 
-class ProductDetailView(APIView, IsOwnerOrReadOnly):
+class ProductDetailView(APIView):
     """Класс для просмотра товара и отзывов на одной странице """
     permission_classes = IsOwnerOrReadOnly,
 
@@ -41,7 +42,6 @@ class ProductDetailView(APIView, IsOwnerOrReadOnly):
             serializer = ReviewSerializer(data=request.data, context={"request": request})
             serializer.is_valid(raise_exception=True)
             serializer.save()
-
             return Response({"review": serializer.data}, status=status.HTTP_200_OK)
         except:
             return Response({"error": "отзыв не добавлен"}, status=status.HTTP_401_UNAUTHORIZED)
@@ -78,13 +78,12 @@ class ProductDetailView(APIView, IsOwnerOrReadOnly):
         return Response({"review": "Отзыв успешно удален"}, status=status.HTTP_200_OK)
 
 
-
 class SearchProduct(generics.ListAPIView):
     """Класс для поиска товаров"""
     serializer_class = ProductSerializer
 
     def get_queryset(self):
-        return Product.published.filter(title__contains=self.request.GET.get('search'))
+        return Product.published.filter(name__contains=self.request.GET.get('search'))
 
 
 class CategoryProductView(generics.ListAPIView):
