@@ -98,5 +98,5 @@ class CategoryProductView(generics.ListAPIView):
         return CategoryProduct.objects.filter(slug=slug)
 
 
-def home(request):
-    return HttpResponse('<h1>Главная пробная старница</h1>')
+# def home(request):
+#     return HttpResponse('<h1>Главная пробная старница</h1>')
