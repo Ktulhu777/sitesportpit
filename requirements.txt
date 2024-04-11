@@ -27,3 +27,4 @@ django-cors-headers==4.3.1
 django-elasticsearch-dsl
 django-elasticsearch-dsl-drf
 elasticsearch==7.17
+django-cors-headers

@@ -28,7 +28,7 @@ CSRF_TRUSTED_ORIGINS = env('CSRF_TRUSTED_ORIGINS').split()
 # INTERNAL_IPS = ["127.0.0.1"]
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
-# CORS_ALLOWED_ORIGINS = ['http://localhost:8000', 'http://localhost:3000']
+CORS_ALLOWED_ORIGINS = ['http://project-pit.ru:8000', 'http://project-pit.ru:3000', 'https://project-pit.ru:8000', 'https://project-pit.ru:3000']
 
 CACHES = {
     'default': {
