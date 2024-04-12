@@ -5,10 +5,10 @@ from . import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('api/admin/', admin.site.urls),
+    path('/admin/', admin.site.urls),
     path('api/', include('product.urls')),
-    path('api/', include('users.urls')),
-    path('api/search/', include('search.urls')),
+    path('/', include('users.urls')),
+    path('/search/', include('search.urls')),
     path("__debug__/", include(debug_toolbar.urls)),
 ]
 
