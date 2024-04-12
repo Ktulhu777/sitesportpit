@@ -26,4 +26,4 @@ djoser==2.2.2
 django-elasticsearch-dsl
 django-elasticsearch-dsl-drf
 elasticsearch==7.17
-
+django-filter==24.2

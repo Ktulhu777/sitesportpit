@@ -20,8 +20,6 @@ SECRET_KEY = 'django-insecure-$cqq_02b5_pv^z8%6(y7@#ad_(*%2^i5^0h1qo7lbnhs9*e)2v
 # DEBUG = int(env('DEBUG', default=1))
 DEBUG = True
 
-
-
 # ALLOWED_HOSTS = env('ALLOWED_HOSTS').split()
 
 # CSRF_TRUSTED_ORIGINS = env('CSRF_TRUSTED_ORIGINS').split()
@@ -66,6 +64,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'rest_framework',
     'rest_framework.authtoken',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -194,6 +193,10 @@ REST_FRAMEWORK = {
 
     'DEFAULT_PERMISSION_CLASSES': [  # настройки доступа
         'rest_framework.permissions.AllowAny',
+    ],
+
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
     ],
 
     # 'DEFAULT_PARSER_CLASSES': [

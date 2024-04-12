@@ -4,10 +4,11 @@ from rest_framework import generics, status
 from rest_framework.views import APIView
 from .models import Product, CategoryProduct, Review
 from .serializers import ProductSerializer, CategorySerializer, ReviewSerializer
-
+from django_filters import rest_framework as filters
 from rest_framework.response import Response
 from .permissions import IsOwnerOrReadOnly
 from django_elasticsearch_dsl_drf.pagination import PageNumberPagination
+from .filters import ProductFilter
 
 
 class ProductPagination(PageNumberPagination):
@@ -21,6 +22,8 @@ class ProductAllView(generics.ListAPIView):
     """Класс для просмотра списка товаров с пагинацией """
     queryset = Product.published.annotate(_avg_rating=Avg('review__rating')).all().select_related('category')
     serializer_class = ProductSerializer
+    filterset_class = ProductFilter
+    # filter_backends = (filters.DjangoFilterBackend,)
     # pagination_class = ProductPagination
 
 
