@@ -28,5 +28,5 @@ django-elasticsearch-dsl
 django-elasticsearch-dsl-drf
 elasticsearch==7.17
 django-cors-headers
-django-filter==24.2
+django-filter
 cloudipsp # для оплаты на сайте
