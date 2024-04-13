@@ -12,18 +12,18 @@ class GalleryInline(admin.TabularInline):
 class ProductModel(admin.ModelAdmin):
     fields = ('name', 'description', 'is_published', 'price', 'discount_price', 'category', 'quantity')
     ordering = ('-time_create', 'name',)
-    readonly_fields = ('product_img',)
-    list_display = ('name', 'product_img', 'time_create', 'is_published', 'category')
+    # readonly_fields = ('product_img',)
+    list_display = ('name', 'time_create', 'is_published', 'category')
     list_display_links = ('name',)
     save_on_top = True
     inlines = (GalleryInline,)
 
-    @admin.display(description="Изображение", ordering='description')
-    def product_img(self, product: Product):
-        """Функция вывода изображения, если оно есть"""
-        if product.img:
-            return mark_safe(f"<img src='{product.img.url}' width=50>")
-        return "Без фото"
+    # @admin.display(description="Изображение", ordering='description')
+    # def product_img(self, product: Product):
+    #     """Функция вывода изображения, если оно есть"""
+    #     if product.img:
+    #         return mark_safe(f"<img src='{product.img.url}' width=50>")
+    #     return "Без фото"
 
 
 @admin.register(CategoryProduct)
