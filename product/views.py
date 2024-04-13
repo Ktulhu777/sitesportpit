@@ -4,6 +4,8 @@ from cloudipsp import Api, Checkout
 from django.db.models import Count, Avg, Q
 from django.http import HttpResponse
 from rest_framework import generics, status
+from rest_framework.generics import CreateAPIView
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.views import APIView
 from .models import Product, CategoryProduct, Review
 from .serializers import ProductSerializer, CategorySerializer, ReviewSerializer, OrderSerializer
@@ -118,7 +120,3 @@ class OrderView(APIView):
             url = checkout.url(data).get('checkout_url')
             return Response({'result': 'Пожалуйста подождите...', 'url': url})
         return Response({'result': 'Ошибка в форме'})
-
-
-def home(request):
-    return HttpResponse('<h1>Главная пробная старница</h1>')
