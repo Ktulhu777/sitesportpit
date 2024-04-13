@@ -26,4 +26,5 @@ djoser==2.2.2
 django-elasticsearch-dsl
 django-elasticsearch-dsl-drf
 elasticsearch==7.17
+cloudipsp # для оплаты на сайте
 

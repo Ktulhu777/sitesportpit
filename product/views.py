@@ -1,9 +1,12 @@
+import time
+
+from cloudipsp import Api, Checkout
 from django.db.models import Count, Avg, Q
 from django.http import HttpResponse
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from .models import Product, CategoryProduct, Review
-from .serializers import ProductSerializer, CategorySerializer, ReviewSerializer
+from .serializers import ProductSerializer, CategorySerializer, ReviewSerializer, OrderSerializer
 
 from rest_framework.response import Response
 from .permissions import IsOwnerOrReadOnly
@@ -96,6 +99,25 @@ class CategoryProductView(generics.ListAPIView):
         if not slug:
             return CategoryProduct.objects.annotate(total=Count("product")).filter(total__gt=0)
         return CategoryProduct.objects.filter(slug=slug)
+
+
+class OrderView(APIView):
+    def post(self, request):
+        order = OrderSerializer(data=request.data)
+        if order.is_valid():
+            order.save()
+            api = Api(merchant_id=1396424,
+                      secret_key='test')
+            checkout = Checkout(api=api)
+            data = {
+                "currency": "RUB",
+                "amount": round(int(request.data['summa']), 2),
+                "order_descr": 'Оплата товаров',
+                "order_time": str(time.time()),
+            }
+            url = checkout.url(data).get('checkout_url')
+            return Response({'result': 'Пожалуйста подождите...', 'url': url})
+        return Response({'result': 'Ошибка в форме'})
 
 
 def home(request):

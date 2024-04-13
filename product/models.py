@@ -60,7 +60,7 @@ class Product(models.Model):
         return None
 
     def save(self, *args, **kwargs):
-        """Формирует автомачески slug для продукта"""
+        """Формирует автоматически slug для продукта"""
         transliterated_name = unidecode(str(self.name))
         self.slug = slugify(transliterated_name)
         super().save(*args, **kwargs)
@@ -104,3 +104,17 @@ class Review(models.Model):
         ordering = ('-create_date',)
         verbose_name = 'Отзыв'
         verbose_name_plural = 'Отзывы'
+
+
+class Order(models.Model):
+    name = models.CharField(max_length=30, verbose_name='Имя')
+    surname = models.CharField(max_length=55, verbose_name='Фамилия')
+    email = models.CharField(max_length=255, verbose_name='E-mail')
+    phone = models.CharField(max_length=12, verbose_name='Телефон')
+    city = models.CharField(max_length=50, verbose_name='Город')
+    street = models.CharField(max_length=50, verbose_name='Улица')
+    house = models.CharField(max_length=20, verbose_name='Номер дома')
+    basket = models.TextField(verbose_name='Корзина')
+
+    def __str__(self):
+        return f'{self.name} {self.surname} ({self.phone}) {self.email}'

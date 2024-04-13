@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
-from .models import Product, CategoryProduct, Review
+from .models import Product, CategoryProduct, Review, Order
 
 
 @admin.register(Product)
@@ -33,3 +33,6 @@ class ReviewAdmin(admin.ModelAdmin):
     list_display = ('user', 'product_review', 'rating', 'create_date')
     list_display_links = ('user', 'product_review')
     # readonly_fields = ('user', 'product_review', 'rating', 'review')
+
+
+admin.site.register(Order)

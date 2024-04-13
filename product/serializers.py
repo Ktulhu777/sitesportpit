@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product, CategoryProduct, Review
+from .models import Product, CategoryProduct, Review, Order
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -38,3 +38,9 @@ class ReviewSerializer(serializers.ModelSerializer):
         instance.changes = True
         instance.save()
         return instance
+
+
+class OrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = '__all__'
