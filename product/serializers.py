@@ -17,16 +17,11 @@ class ProductImagesSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     category = serializers.CharField()
     images = ProductImagesSerializer(many=True, read_only=True)
-    img = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
         fields = ('id', 'name', 'description', 'price', 'img', 'discount_price',
                   'discount', 'time_create', 'category', 'avg_rating', 'images',)
-
-    def get_img(self, obj):
-        if obj.img:
-            return obj.img.url
 
 
 class CategorySerializer(serializers.ModelSerializer):
