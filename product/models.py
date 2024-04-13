@@ -23,7 +23,7 @@ class Product(models.Model):
     description = models.TextField(blank=True, verbose_name='Описание')
     is_published = models.BooleanField(default=Status.PUBLISHED)
     price = models.FloatField(blank=True, default=100, verbose_name='Цена')
-    discount_price = models.FloatField(blank=True, default=price, verbose_name='Скидка', null=True)
+    discount_price = models.FloatField(blank=True, default=price, verbose_name='Цена со скидкой', null=True)
     img = models.ImageField(upload_to="photos/%Y/%m/%d/", default=None,
                             blank=True, null=True, verbose_name="img")
     time_create = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
