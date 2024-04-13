@@ -1,7 +1,8 @@
 from django.db.models import Count, Avg
-from django.http import HttpResponse
 from rest_framework import generics, status
 from rest_framework.views import APIView
+
+from .filters import ProductFilter
 from .models import Product, CategoryProduct, Review
 from .serializers import ProductSerializer, CategorySerializer, ReviewSerializer
 from rest_framework.pagination import PageNumberPagination
@@ -20,7 +21,7 @@ class ProductAllView(generics.ListAPIView):
     """Класс для просмотра списка товаров с пагинацией """
     queryset = Product.published.annotate(_avg_rating=Avg('review__rating')).all()
     serializer_class = ProductSerializer
-    # pagination_class = ProductPagination
+    filterset_class = ProductFilter
 
 
 class ProductDetailView(APIView, IsOwnerOrReadOnly):
@@ -98,5 +99,4 @@ class CategoryProductView(generics.ListAPIView):
         return CategoryProduct.objects.filter(slug=slug)
 
 
-# def home(request):
-#     return HttpResponse('<h1>Главная пробная старница</h1>')
+

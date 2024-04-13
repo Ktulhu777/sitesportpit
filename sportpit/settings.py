@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     # 'search.apps.SearchConfig',
     'debug_toolbar',
+    'django_filters',
 ]
 
 MIDDLEWARE = [

@@ -1,16 +1,22 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
-from .models import Product, CategoryProduct, Review
+from .models import Product, CategoryProduct, Review, ProductImages
+
+
+class GalleryInline(admin.TabularInline):
+    fk_name = 'product'
+    model = ProductImages
 
 
 @admin.register(Product)
 class ProductModel(admin.ModelAdmin):
-    fields = ('name', 'description', 'img', 'product_img', 'is_published', 'price', 'discount', 'category', 'quantity')
+    fields = ('name', 'description', 'product_img', 'is_published', 'price', 'discount_price', 'category', 'quantity')
     ordering = ('-time_create', 'name',)
     readonly_fields = ('product_img',)
     list_display = ('name', 'product_img', 'time_create', 'is_published', 'category')
     list_display_links = ('name',)
     save_on_top = True
+    inlines = (GalleryInline,)
 
     @admin.display(description="Изображение", ordering='description')
     def product_img(self, product: Product):

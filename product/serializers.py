@@ -1,15 +1,28 @@
 from rest_framework import serializers
-from .models import Product, CategoryProduct, Review
+from .models import Product, CategoryProduct, Review, ProductImages
+
+
+class ProductImagesSerializer(serializers.ModelSerializer):
+    img = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ProductImages
+        fields = ('id', 'img')
+
+    def get_img(self, obj):
+        if obj.image:
+            return obj.image.url
 
 
 class ProductSerializer(serializers.ModelSerializer):
     category = serializers.CharField()
+    images = ProductImagesSerializer(many=True, read_only=True)
     img = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
-        fields = ('id', 'name', 'description', 'img', 'price', 'discount',
-                  'discount_price', 'time_create', 'category', 'avg_rating',)
+        fields = ('id', 'name', 'description', 'price', 'img', 'discount_price',
+                  'discount', 'time_create', 'category', 'avg_rating', 'images',)
 
     def get_img(self, obj):
         if obj.img:
