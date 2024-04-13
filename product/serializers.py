@@ -23,11 +23,11 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    user = serializers.CharField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = Review
-        fields = ("id", "user", "review", 'product_review', "create_date", "changes", "rating")
+        fields = ("id", "user", "review", "product_review", "create_date", "changes", "rating")
 
     def create(self, validated_data):
         return Review.objects.create(**validated_data)
