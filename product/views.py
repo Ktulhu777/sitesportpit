@@ -1,5 +1,4 @@
 from django.db.models import Count, Avg
-from django.http import HttpResponse
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from .models import Product, CategoryProduct, Review
@@ -22,8 +21,6 @@ class ProductAllView(generics.ListAPIView):
     queryset = Product.published.annotate(_avg_rating=Avg('review__rating')).all().select_related('category')
     serializer_class = ProductSerializer
     filterset_class = ProductFilter
-    # filter_backends = (filters.DjangoFilterBackend,)
-    # pagination_class = ProductPagination
 
 
 class ProductDetailView(APIView):
