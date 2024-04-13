@@ -12,7 +12,7 @@ class GalleryInline(admin.TabularInline):
 class ProductModel(admin.ModelAdmin):
     fields = ('name', 'description', 'product_img', 'is_published', 'price', 'discount_price', 'category', 'quantity')
     ordering = ('-time_create', 'name',)
-    readonly_fields = ('product_img',)
+    # readonly_fields = ('product_img',)
     list_display = ('name', 'product_img', 'time_create', 'is_published', 'category')
     list_display_links = ('name',)
     save_on_top = True
