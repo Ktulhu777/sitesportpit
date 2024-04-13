@@ -1,10 +1,9 @@
-from django.db.models import Count, Avg, Q
+from django.db.models import Count, Avg
 from django.http import HttpResponse
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from .models import Product, CategoryProduct, Review
 from .serializers import ProductSerializer, CategorySerializer, ReviewSerializer
-from django_filters import rest_framework as filters
 from rest_framework.response import Response
 from .permissions import IsOwnerOrReadOnly
 from django_elasticsearch_dsl_drf.pagination import PageNumberPagination
@@ -99,7 +98,3 @@ class CategoryProductView(generics.ListAPIView):
         if not slug:
             return CategoryProduct.objects.annotate(total=Count("product")).filter(total__gt=0)
         return CategoryProduct.objects.filter(slug=slug)
-
-
-def home(request):
-    return HttpResponse('<h1>Главная пробная старница</h1>')
