@@ -55,11 +55,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_elasticsearch_dsl',
-    'django_elasticsearch_dsl_drf',
+    # 'django_elasticsearch_dsl',
+    # 'django_elasticsearch_dsl_drf',
     'product.apps.ProductConfig',
     'users.apps.UsersConfig',
-    'search.apps.SearchConfig',
+    # 'search.apps.SearchConfig',
     'djoser',
     'debug_toolbar',
     'rest_framework',
@@ -274,16 +274,16 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_HOST_USER="kalaitanov93@yandex.ru"
 # EMAIL_HOST_PASSWORD="vwtirwwxurbbwyjv"
 
-# EMAIL_HOST = env('EMAIL_HOST')
-# EMAIL_PORT = env('EMAIL_PORT')
-# EMAIL_USE_SSL = int(env('EMAIL_USE_SSL', default=1))
-#
-# EMAIL_HOST_USER = env('EMAIL_HOST_USER')
-# EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
-#
-# EMAIL_SERVER = EMAIL_HOST_USER
-# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-# EMAIL_ADMIN = list(EMAIL_HOST_USER)
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_PORT = env('EMAIL_PORT')
+EMAIL_USE_SSL = int(env('EMAIL_USE_SSL', default=1))
+
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+
+EMAIL_SERVER = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_ADMIN = list(EMAIL_HOST_USER)
 
 # Другие параметры
 
@@ -292,12 +292,12 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 AUTH_USER_MODEL = 'users.User'
 
-ELASTICSEARCH_DSL = {
-    'default': {
-        'hosts': 'http://elasticsearch:9200'
-    },
-}
-
-ELASTICSEARCH_INDEX_NAMES = {
-    'products.product': 'products',
-}
+# ELASTICSEARCH_DSL = {
+#     'default': {
+#         'hosts': 'http://elasticsearch:9200'
+#     },
+# }
+#
+# ELASTICSEARCH_INDEX_NAMES = {
+#     'products.product': 'products',
+# }

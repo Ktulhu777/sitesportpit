@@ -1,12 +1,16 @@
+import time
+
+from cloudipsp import Api, Checkout
 from django.db.models import Count, Avg
-from rest_framework import generics, status
-from rest_framework.views import APIView
-from .models import Product, CategoryProduct, Review
-from .serializers import ProductSerializer, CategorySerializer, ReviewSerializer
-from rest_framework.response import Response
-from .permissions import IsOwnerOrReadOnly
 from django_elasticsearch_dsl_drf.pagination import PageNumberPagination
+from rest_framework import generics, status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from .filters import ProductFilter
+from .models import Product, CategoryProduct, Review
+from .permissions import IsOwnerOrReadOnly
+from .serializers import ProductSerializer, CategorySerializer, ReviewSerializer, OrderSerializer
 
 
 class ProductPagination(PageNumberPagination):
@@ -42,6 +46,7 @@ class ProductDetailView(APIView):
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response({"review": serializer.data}, status=status.HTTP_200_OK)
+
         except:
             return Response({"error": "отзыв не добавлен"}, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -95,3 +100,23 @@ class CategoryProductView(generics.ListAPIView):
         if not slug:
             return CategoryProduct.objects.annotate(total=Count("product")).filter(total__gt=0)
         return CategoryProduct.objects.filter(slug=slug)
+
+
+class OrderView(APIView):
+
+    def post(self, request):
+        order = OrderSerializer(data=request.data)
+        if order.is_valid():
+            order.save()
+            api = Api(merchant_id=1396424,
+                      secret_key='test')
+            checkout = Checkout(api=api)
+            data = {
+                "currency": "RUB",
+                "amount": round(int(request.data['summa']), 2),
+                "order_descr": 'Оплата товаров',
+                "order_time": str(time.time()),
+            }
+            url = checkout.url(data).get('checkout_url')
+            return Response({'result': 'Пожалуйста подождите...', 'url': url})
+        return Response({'result': 'Ошибка в форме'})
