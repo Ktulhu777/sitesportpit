@@ -7,7 +7,6 @@ from rest_framework.response import Response
 from .permissions import IsOwnerOrReadOnly
 from django_elasticsearch_dsl_drf.pagination import PageNumberPagination
 from .filters import ProductFilter
-from typing import Self
 
 
 class ProductPagination(PageNumberPagination):
@@ -106,6 +105,6 @@ class LikeProductViews(mixins.CreateModelMixin,
     queryset = LikeProduct.objects.all()
 
     def destroy(self, request, *args: tuple, **kwargs: dict) -> Response[dict, status]:
-        product: Self = self.get_object()
+        product = self.get_object()
         product.delete()
         return Response({"delete": 'лайк удален'}, status=status.HTTP_200_OK)
