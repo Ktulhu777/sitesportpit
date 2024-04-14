@@ -130,3 +130,12 @@ class ProductImages(models.Model):
 
     def __str__(self):
         return f'Товар: {self.product.name}'
+
+
+class LikeProduct(models.Model):
+    """Класс лайков продуктов"""
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='like')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='like')
+    like = models.BooleanField(default=False)
+
+    objects = models.Manager()

@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import Product, CategoryProduct, Review, Order, ProductImages
+from .models import Product, CategoryProduct, Review, Order, ProductImages, LikeProduct
+from .validators import ValidateBasicsLike
 
 
 class ProductImagesSerializer(serializers.ModelSerializer):
@@ -17,17 +18,11 @@ class ProductImagesSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     category = serializers.CharField()
     images = ProductImagesSerializer(many=True, read_only=True)
-    img = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
         fields = ('id', 'name', 'description', 'price', 'img', 'discount_price',
                   'discount', 'time_create', 'category', 'avg_rating', 'images',)
-
-    def get_img(self, obj):
-        if obj.img:
-            return obj.img.url
-
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -58,3 +53,12 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = '__all__'
+
+
+class LikeProductSerializer(serializers.ModelSerializer, ValidateBasicsLike):
+    class Meta:
+        model = LikeProduct
+        fields = ('id', 'user', 'product', 'like')
+
+    def create(self, validated_data):
+        return LikeProduct.objects.create(**validated_data)
