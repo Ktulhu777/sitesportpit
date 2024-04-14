@@ -3,7 +3,9 @@ from . import views
 
 
 urlpatterns = [
-    path('', views.home, name='home'),
+    # path('', views.home, name='home'),
+    path('api/v1/like/', views.LikeProductViews.as_view({'post': 'create'})),
+    path('api/v1/like/<int:pk>/', views.LikeProductViews.as_view({'delete': 'destroy'})),
     path('api/v1/search/', views.SearchProduct.as_view()),
     path('api/v1/product-list/', views.ProductAllView.as_view()),
     path('api/v1/product-list/<int:pk>/', views.ProductDetailView.as_view()),
