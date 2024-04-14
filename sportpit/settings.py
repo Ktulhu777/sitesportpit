@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     # 'django_elasticsearch_dsl_drf',
     'product.apps.ProductConfig',
     'users.apps.UsersConfig',
+    'cart.apps.CartConfig',
     # 'search.apps.SearchConfig',
     'djoser',
     'debug_toolbar',
