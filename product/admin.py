@@ -1,5 +1,4 @@
 from django.contrib import admin
-from django.utils.safestring import mark_safe
 from .models import Product, CategoryProduct, Review, Order, ProductImages
 
 
@@ -10,20 +9,13 @@ class GalleryInline(admin.TabularInline):
 
 @admin.register(Product)
 class ProductModel(admin.ModelAdmin):
-    fields = ('name', 'description', 'is_published', 'price', 'discount_price', 'category', 'quantity')
+    fields = ('name', 'slug', 'description', 'is_published', 'price', 'discount_price', 'category', 'quantity')
     ordering = ('-time_create', 'name',)
-    # readonly_fields = ('product_img',)
+    prepopulated_fields = {"slug": ('name',)}
     list_display = ('name', 'time_create', 'is_published', 'category')
     list_display_links = ('name',)
     save_on_top = True
-    inlines = (GalleryInline, )
-
-    # @admin.display(description="Изображение", ordering='description')
-    # def product_img(self, product: Product):
-    #     """Функция вывода изображения, если оно есть"""
-    #     if product.img:
-    #         return mark_safe(f"<img src='{product.img.url}' width=50>")
-    #     return "Без фото"
+    inlines = (GalleryInline,)
 
 
 @admin.register(CategoryProduct)
@@ -42,5 +34,3 @@ class ReviewAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Order)
-
-

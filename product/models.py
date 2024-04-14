@@ -1,8 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import Avg
-from django.template.defaultfilters import slugify
-from unidecode import unidecode
 
 
 class PublishedManager(models.Manager):
@@ -42,27 +40,18 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
-    @property
     def get_category(self):
         return self.category.cat_name
 
-    @property
     def avg_rating(self):
         if hasattr(self, '_avg_rating'):
             return self._avg_rating
         return self.review.aggregate(Avg('rating'))
 
-    @property
     def discount(self):
         if self.discount_price:
             return round((self.price - self.discount_price) / self.price * 100, 2)
         return None
-
-    def save(self, *args, **kwargs):
-        """Формирует автоматически slug для продукта"""
-        transliterated_name = unidecode(str(self.name))
-        self.slug = slugify(transliterated_name)
-        super().save(*args, **kwargs)
 
 
 class CategoryProduct(models.Model):
