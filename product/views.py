@@ -29,8 +29,8 @@ class ProductDetailView(APIView, IsOwnerOrReadOnly):
     permission_classes = IsOwnerOrReadOnly,
 
     def get(self, request, pk):
-        product = Product.published.annotate(_avg_rating=Avg('review__rating')).filter(slug=pk)
-        review = Review.objects.filter(product_review__slug=pk).select_related('user')
+        product = Product.published.annotate(_avg_rating=Avg('review__rating')).filter(pk=pk)
+        review = Review.objects.filter(product_review__pk=pk).select_related('user')
 
         return Response({"product": ProductSerializer(product, many=True).data,
                          "review": ReviewSerializer(review, many=True).data})
