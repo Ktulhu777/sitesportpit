@@ -30,6 +30,8 @@ CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 # CORS_ALLOWED_ORIGINS = ['http://project-pit.ru', 'https://project-pit.ru']
 
+CART_SESSION_ID = 'cart'
+
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
@@ -57,13 +59,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # 'django_elasticsearch_dsl',
-    'django_elasticsearch_dsl_drf',
+    # 'django_elasticsearch_dsl_drf',
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
     'djoser',
     'product.apps.ProductConfig',
     'users.apps.UsersConfig',
+    'cart.apps.CartConfig',
     # 'search.apps.SearchConfig',
     'debug_toolbar',
     'django_filters',
