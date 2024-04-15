@@ -21,7 +21,7 @@ class Product(models.Model):
     description = models.TextField(blank=True, verbose_name='Описание')
     is_published = models.BooleanField(default=Status.PUBLISHED)
     price = models.FloatField(blank=True, default=100, verbose_name='Цена')
-    discount_price = models.FloatField(blank=True, default=0, verbose_name='Цена со скидкой', null=True)
+    discount_price = models.FloatField(blank=True, default=price, verbose_name='Цена со скидкой', null=True)
 
     time_create = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     time_update = models.DateTimeField(auto_now=True, verbose_name='Дата обновления статьи')

@@ -14,14 +14,22 @@ class ProductModel(admin.ModelAdmin):
     prepopulated_fields = {"slug": ('name',)}
     list_display = ('name', 'time_create', 'is_published', 'category')
     list_display_links = ('name',)
+    prepopulated_fields = {'slug': ('name',)}
     save_on_top = True
     inlines = (GalleryInline,)
+
+    # @admin.display(description="Изображение", ordering='description')
+    # def product_img(self, product: Product):
+    #     """Функция вывода изображения, если оно есть"""
+    #     if product.img:
+    #         return mark_safe(f"<img src='{product.img.url}' width=50>")
+    #     return "Без фото"
 
 
 @admin.register(CategoryProduct)
 class CategoryProductAdmin(admin.ModelAdmin):
     fields = ('cat_name', 'slug',)
-    prepopulated_fields = {"slug": ("cat_name",)}  # автоматически формирует слаг на основе cat_name
+    prepopulated_fields = {'slug': ('cat_name',)}  # автоматически формирует слаг на основе cat_name
 
 
 @admin.register(Review)
