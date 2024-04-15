@@ -1,8 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import Avg
-from django.template.defaultfilters import slugify
-from unidecode import unidecode
 
 
 class PublishedManager(models.Manager):
@@ -17,19 +15,25 @@ class Product(models.Model):
         DRAFT = 0, 'Черновик'
         PUBLISHED = 1, 'Опубликовано'
 
-    name = models.CharField(max_length=150, verbose_name='Название продукта')
-    slug = models.SlugField(max_length=255, blank=True,
-                            unique=True, verbose_name='Slug (Формируется автоматически)')
-    description = models.TextField(blank=True, verbose_name='Описание')
-    is_published = models.BooleanField(default=Status.PUBLISHED)
-    price = models.FloatField(blank=True, default=100, verbose_name='Цена')
-    discount_price = models.FloatField(blank=True, default=price, verbose_name='Цена со скидкой', null=True)
+    name = models.CharField('Название продукта', max_length=150, db_index=True)
 
-    time_create = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
-    time_update = models.DateTimeField(auto_now=True, verbose_name='Дата обновления статьи')
-    category = models.ForeignKey('CategoryProduct', on_delete=models.CASCADE, null=True,
-                                 related_name='product', verbose_name="Категории")
-    quantity = models.PositiveIntegerField(default=0, verbose_name='Количество')
+    slug = models.SlugField(
+        'Slug(Формируется автоматически)',
+        max_length=255, blank=True, unique=True
+    )
+    description = models.TextField('Описание', blank=True)
+    is_published = models.BooleanField('Опубликовано', default=Status.PUBLISHED)
+    price = models.FloatField('Цена', blank=True, default=100)
+    discount_price = models.FloatField('Цена со скидкой', blank=True, default=0, null=True)
+
+    time_create = models.DateTimeField('Дата создания', auto_now_add=True)
+    time_update = models.DateTimeField('Дата обновления статьи', auto_now=True)
+
+    category = models.ForeignKey(
+        'CategoryProduct', on_delete=models.CASCADE, null=True,
+        related_name='product', verbose_name='Категории'
+    )
+    quantity = models.PositiveIntegerField('Количество', default=0)
 
     objects = models.Manager()
     published = PublishedManager()
@@ -42,17 +46,14 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
-    @property
     def get_category(self):
         return self.category.cat_name
 
-    @property
     def avg_rating(self):
         if hasattr(self, '_avg_rating'):
             return self._avg_rating
         return self.review.aggregate(Avg('rating'))
 
-    @property
     def discount(self):
         if self.discount_price:
             return round((self.price - self.discount_price) / self.price * 100, 2)
@@ -61,8 +62,11 @@ class Product(models.Model):
 
 class CategoryProduct(models.Model):
     """Основная модель категорий"""
-    cat_name = models.CharField(max_length=255, db_index=True, verbose_name='Категория')
-    slug = models.SlugField(max_length=255, unique=True, verbose_name='Slug (Формируется автоматически)')
+    cat_name = models.CharField('Категория', max_length=255, db_index=True)
+
+    slug = models.SlugField(
+        'Slug (Формируется автоматически)', max_length=255, unique=True
+    )
 
     objects = models.Manager()
 
@@ -82,21 +86,34 @@ class Review(models.Model):
         four = 4, '★★★★☆'
         five = 5, '★★★★★'
 
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='review')
-    review = models.TextField(blank=True, verbose_name='Отзыв', null=True)
-    create_date = models.DateTimeField(auto_now_add=True)
-    changes = models.BooleanField(default=False)
-    product_review = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='review', null=True)
-    rating = models.IntegerField(null=True, blank=True, verbose_name='Оценка', choices=RatingChoice.choices)
-    objects = models.Manager()
+    user = models.ForeignKey(
+        get_user_model(), on_delete=models.CASCADE,
+        related_name='review', verbose_name='Пользователь'
+    )
 
-    def __str__(self):
-        return f'Пользователь: {self.user}, товар: {self.product_review}, оценка: {self.rating}'
+    review = models.TextField('Отзыв', blank=True, null=True)
+    create_date = models.DateTimeField('Дата добавления', auto_now_add=True)
+    changes = models.BooleanField('Изменено', default=False)
+
+    product_review = models.ForeignKey(
+        Product, on_delete=models.CASCADE,
+        related_name='review', verbose_name='Товар', null=True
+    )
+
+    rating = models.IntegerField(
+        'Оценка', blank=True,
+        null=True, choices=RatingChoice.choices
+    )
+
+    objects = models.Manager()
 
     class Meta:
         ordering = ('-create_date',)
         verbose_name = 'Отзыв'
         verbose_name_plural = 'Отзывы'
+
+    def __str__(self):
+        return f'Пользователь: {self.user}, товар: {self.product_review}, оценка: {self.rating}'
 
 
 def product_image_directory_path(instance, filename):
@@ -105,8 +122,12 @@ def product_image_directory_path(instance, filename):
 
 
 class ProductImages(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(upload_to=product_image_directory_path)
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE,
+        related_name='images', verbose_name='Товар'
+    )
+
+    image = models.ImageField('Изображение', upload_to=product_image_directory_path)
 
     def __str__(self):
         return f'Товар: {self.product.name}'
@@ -116,6 +137,19 @@ class LikeProduct(models.Model):
     """Класс лайков продуктов"""
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='like')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='like')
-    like = models.BooleanField(default=False)
+    like = models.BooleanField('Лайк', default=False)
 
     objects = models.Manager()
+
+# class Order(models.Model):
+#     name = models.CharField('Имя', max_length=30)
+#     surname = models.CharField('Фамилия', max_length=55)
+#     email = models.CharField('E-mail', max_length=255)
+#     phone = models.CharField('Телефон', max_length=12)
+#     city = models.CharField('Город', max_length=50)
+#     street = models.CharField('Улица', max_length=50)
+#     house = models.CharField('Номер дома', max_length=20)
+#     basket = models.TextField('Корзина')
+#
+#     def __str__(self):
+#         return f'{self.name} {self.surname} ({self.phone}) {self.email}'

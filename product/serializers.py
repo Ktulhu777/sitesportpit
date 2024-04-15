@@ -36,14 +36,14 @@ class ReviewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Review
-        fields = ("id", "user", "review", 'product_review', "create_date", "changes", "rating")
+        fields = ('id', "user", "review", 'product_review', 'create_date', 'changes', 'rating')
 
     def create(self, validated_data):
         return Review.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
-        instance.review = validated_data.get("review", instance.review)
-        instance.rating = validated_data.get("rating", instance.rating)
+        instance.review = validated_data.get('review', instance.review)
+        instance.rating = validated_data.get('rating', instance.rating)
         instance.changes = True
         instance.save()
         return instance

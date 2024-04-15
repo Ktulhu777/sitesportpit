@@ -20,19 +20,19 @@ class Cart:
     def add(self, product, quantity=1, overide_quantity=False):
         """Добавляем продукт в корзину и обновляем количество"""
 
-        product_id = str(product["id"])
+        product_id = str(product['id'])
         if product_id not in self.cart:
-            self.cart[product_id] = {"quantity": 0}
+            self.cart[product_id] = {'quantity': 0}
 
         if overide_quantity:
-            self.cart[product_id]["quantity"] = quantity
+            self.cart[product_id]['quantity'] = quantity
         else:
-            self.cart[product_id]["quantity"] += quantity
+            self.cart[product_id]['quantity'] += quantity
         self.save()
 
     def remove(self, product):
         """Удаляем продукт из корзины"""
-        product_id = str(product["id"])
+        product_id = str(product['id'])
 
         if product_id in self.cart:
             del self.cart[product_id]
@@ -44,26 +44,26 @@ class Cart:
         products = Product.published.filter(id__in=product_ids)
         cart = self.cart.copy()
         for product in products:
-            cart[str(product.id)]["product"] = CartSerializer(product).data
+            cart[str(product.id)]['product'] = CartSerializer(product).data
 
         for item in cart.values():
-            item["total_price"] = item["product"]["price"] * item["quantity"]
+            item['total_price'] = item['product']['price'] * item['quantity']
             yield item
 
     def __len__(self):
         """Количество товаров в корзине"""
-        return sum(item["quantity"] for item in self.cart.values())
+        return sum(item['quantity'] for item in self.cart.values())
 
     def get_total_price(self):
-        return sum(Decimal(item["product"]["price"]) * item["quantity"] for item in self.cart.values())
+        return sum(Decimal(item['product']['price']) * item['quantity'] for item in self.cart.values())
 
     def get_total_discount_price(self):
         summ = 0
         for item in self.cart.values():
-            if item["product"]['discount_price']:
-                summ += Decimal(item["product"]['discount_price']) * item["quantity"]
+            if item['product']['discount_price']:
+                summ += Decimal(item['product']['discount_price']) * item['quantity']
             else:
-                summ += Decimal(item["product"]['price']) * item["quantity"]
+                summ += Decimal(item['product']['price']) * item['quantity']
         return summ
 
     def clear(self):

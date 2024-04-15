@@ -13,8 +13,8 @@ class CartAPI(APIView):
 
         return Response(
             {"cart": list(cart.__iter__()),
-             "cart_total_price": cart.get_total_price(),
-             "cart_total_discount_price": cart.get_total_discount_price(),
+             'cart_total_price': cart.get_total_price(),
+             'cart_total_discount_price': cart.get_total_discount_price(),
              },
             status=status.HTTP_200_OK
         )
@@ -22,21 +22,21 @@ class CartAPI(APIView):
     def post(self, request, **kwargs):
         cart = Cart(request)
 
-        if "remove" in request.data:
-            product = request.data["product"]
+        if 'remove' in request.data:
+            product = request.data['product']
             cart.remove(product)
 
-        elif "clear" in request.data:
+        elif 'clear' in request.data:
             cart.clear()
 
         else:
             product = request.data
             cart.add(
-                product=product["product"],
-                quantity=product["quantity"],
-                overide_quantity=product["overide_quantity"] if "overide_quantity" in product else False
+                product=product['product'],
+                quantity=product['quantity'],
+                overide_quantity=product['overide_quantity'] if 'overide_quantity' in product else False
             )
 
         return Response(
-            {"message": "Корзина обновлена"},
+            {'message': 'Корзина обновлена'},
             status=status.HTTP_202_ACCEPTED)

@@ -1,7 +1,9 @@
 from django.db.models import Count, Avg
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.viewsets import GenericViewSet
 from .filters import ProductFilter
-from rest_framework import generics, status, mixins, viewsets
+from rest_framework import generics, status
+from rest_framework.mixins import CreateModelMixin, DestroyModelMixin
 from rest_framework.views import APIView
 from .models import Product, CategoryProduct, Review, LikeProduct
 from rest_framework.response import Response
@@ -32,51 +34,64 @@ class ProductDetailView(APIView, IsOwnerOrReadOnly):
         product = Product.published.annotate(_avg_rating=Avg('review__rating')).filter(pk=pk)
         review = Review.objects.filter(product_review__pk=pk).select_related('user')
 
-        return Response({"product": ProductSerializer(product, many=True).data,
-                         "review": ReviewSerializer(review, many=True).data})
+        return Response(
+            {
+                "product": ProductSerializer(product, many=True).data,
+                "review": ReviewSerializer(review, many=True).data
+            }
+        )
 
     def post(self, request, product_slug):
         try:
             product = Product.published.get(slug=product_slug)
-            request.data["product_review"] = product.pk
-            serializer = ReviewSerializer(data=request.data, context={"request": request})
+            request.data['product_review'] = product.pk
+            serializer = ReviewSerializer(data=request.data, context={'request': request})
             serializer.is_valid(raise_exception=True)
             serializer.save()
 
-            return Response({"review": serializer.data}, status=status.HTTP_200_OK)
+            return Response({'review': serializer.data}, status=status.HTTP_200_OK)
         except:
-            return Response({"error": "отзыв не добавлен"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'error': 'отзыв не добавлен'}, status=status.HTTP_401_UNAUTHORIZED)
 
     def put(self, request, *args, **kwargs):
         pk = kwargs.get('pk', None)
 
         if not pk:
-            return Response({"error": "Данного отзыва не существует"})
+            return Response({'error': 'Данного отзыва не существует'})
 
         try:
             instance = Review.objects.get(pk=pk)
             self.check_object_permissions(request, instance)
         except:
-            return Response({"detail": "Данный отзыв нельзя изменить"}, status=status.HTTP_403_FORBIDDEN)
+            return Response(
+                {'detail': 'Данный отзыв нельзя изменить'},
+                status=status.HTTP_403_FORBIDDEN
+            )
 
-        serializer = ReviewSerializer(data=request.data, instance=instance, context={"request": request})
+        serializer = ReviewSerializer(
+            data=request.data, instance=instance,
+            context={'request': request}
+        )
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
-        return Response({"review": serializer.data}, status=status.HTTP_200_OK)
+        return Response({'review': serializer.data}, status=status.HTTP_200_OK)
 
     def delete(self, request, *args, **kwargs):
         pk = kwargs.get('pk', None)
         if not pk:
-            return Response({"error": "Данного отзыва не существует"})
+            return Response({'error': 'Данного отзыва не существует'})
         try:
             instance = Review.objects.get(pk=pk)
             self.check_object_permissions(request, instance)
         except:
-            return Response({"detail": "Данный отзыв нельзя удалить"}, status=status.HTTP_403_FORBIDDEN)
+            return Response(
+                {'detail': 'Данный отзыв нельзя удалить'},
+                status=status.HTTP_403_FORBIDDEN
+            )
 
         instance.delete()
-        return Response({"review": "Отзыв успешно удален"}, status=status.HTTP_200_OK)
+        return Response({'review': 'Отзыв успешно удален'}, status=status.HTTP_200_OK)
 
 
 class SearchProduct(generics.ListAPIView):
@@ -92,10 +107,13 @@ class CategoryProductView(generics.ListAPIView):
     serializer_class = CategorySerializer
 
     def get_queryset(self):
-        """Функция выводит все категории(у которых есть 1 и больше записей) если не указан после '/' slug"""
+        """
+        Функция выводит все категории(у которых есть 1 и больше записей)
+        если не указан после '/' slug
+        """
         slug = self.kwargs.get('slug')
         if not slug:
-            return CategoryProduct.objects.annotate(total=Count("product")).filter(total__gt=0)
+            return CategoryProduct.objects.annotate(total=Count('product')).filter(total__gt=0)
         return CategoryProduct.objects.filter(slug=slug)
 
 
@@ -104,17 +122,19 @@ class IDProduct(APIView):
         product = Product.published.annotate(_avg_rating=Avg('review__rating')).filter(id=pk)
         review = Review.objects.filter(product_review__id=pk).select_related('user')
 
-        return Response({"product": ProductSerializer(product, many=True).data,
-                         "review": ReviewSerializer(review, many=True).data})
+        return Response(
+            {
+                'product': ProductSerializer(product, many=True).data,
+                'review': ReviewSerializer(review, many=True).data
+            }
+        )
 
 
-class LikeProductViews(mixins.CreateModelMixin,
-                       mixins.DestroyModelMixin,
-                       viewsets.GenericViewSet):
+class LikeProductViews(CreateModelMixin, DestroyModelMixin, GenericViewSet):
     serializer_class = LikeProductSerializer
     queryset = LikeProduct.objects.all()
 
     def destroy(self, request, *args: tuple, **kwargs: dict) -> Response[dict, status]:
         product = self.get_object()
         product.delete()
-        return Response({"delete": 'лайк удален'}, status=status.HTTP_200_OK)
+        return Response({'delete': 'лайк удален'}, status=status.HTTP_200_OK)

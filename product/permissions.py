@@ -7,10 +7,10 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
     """
 
     def has_object_permission(self, request, view, obj):
-        """Если запрос безопа́сный то выдает данные на чтение, если запрос не безопасный,
+        """Если запрос безопа́сный - выдает данные на чтение, если запрос не безопасный,
         то происходит проверка, имеет ли отношение пользователя к данному объекту класса"""
         if request.method in permissions.SAFE_METHODS:
             return True
-        elif request.method == "POST":
+        elif request.method == 'POST':
             return True
         return request.user == obj.user

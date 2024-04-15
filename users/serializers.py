@@ -10,11 +10,15 @@ class ProfileSerializer(serializers.ModelSerializer, ValidateBasics):
 
     class Meta:
         model = get_user_model()
-        fields = ["id", "user_photo", "username", "first_name", "last_name", "email", "date_birth", "city", "phone"]
-        read_only_fields = ("id", "username", "email")
+        fields = (
+            'id', 'user_photo', 'username', 'first_name',
+            'last_name', 'email', 'date_birth', 'city', 'phone'
+        )
+
+        read_only_fields = ('id', 'username', 'email')
 
 
 class CustomUserCreatePasswordRetypeSerializer(UserCreatePasswordRetypeSerializer, ValidateBasics):
 
     class Meta(UserCreatePasswordRetypeSerializer.Meta):
-        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'password']
+        fields = ('id', 'username', 'email', 'first_name', 'last_name', 'password')
