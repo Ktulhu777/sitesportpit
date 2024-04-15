@@ -28,9 +28,9 @@ class ProductDetailView(APIView, IsOwnerOrReadOnly):
     """Класс для просмотра товара и отзывов на одной странице """
     permission_classes = IsOwnerOrReadOnly,
 
-    def get(self, request, product_slug):
-        product = Product.published.annotate(_avg_rating=Avg('review__rating')).filter(slug=product_slug)
-        review = Review.objects.filter(product_review__slug=product_slug).select_related('user')
+    def get(self, request, pk):
+        product = Product.published.annotate(_avg_rating=Avg('review__rating')).filter(slug=pk)
+        review = Review.objects.filter(product_review__slug=pk).select_related('user')
 
         return Response({"product": ProductSerializer(product, many=True).data,
                          "review": ReviewSerializer(review, many=True).data})
