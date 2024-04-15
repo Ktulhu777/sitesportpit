@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Product, CategoryProduct, Review, ProductImages, LikeProduct
-from .validators import ValidateBasicsLike
+from .validators import ValidateBasics
 
 
 class ProductImagesSerializer(serializers.ModelSerializer):
@@ -22,7 +22,8 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ('id', 'name', 'slug', 'description', 'price', 'discount_price',
-                  'discount', 'quantity', 'time_create', 'category', 'avg_rating', 'images',)
+                  'discount', 'quantity', 'time_create', 'category', 'avg_rating', 'images',
+                  )
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -31,15 +32,16 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ('cat_name',)
 
 
-class ReviewSerializer(serializers.ModelSerializer):
+class ReviewSerializer(serializers.ModelSerializer, ValidateBasics):
     user = serializers.CharField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = Review
-        fields = ('id', "user", "review", 'product_review', 'create_date', 'changes', 'rating')
+        fields = ('id', 'user', 'review', 'product_review', 'create_date', 'changes', 'rating')
 
-    def create(self, validated_data):
-        return Review.objects.create(**validated_data)
+
+class ReviewSerializerUpdateAndCreateSerializer(ReviewSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     def update(self, instance, validated_data):
         instance.review = validated_data.get('review', instance.review)
@@ -49,10 +51,7 @@ class ReviewSerializer(serializers.ModelSerializer):
         return instance
 
 
-class LikeProductSerializer(serializers.ModelSerializer, ValidateBasicsLike):
+class LikeProductSerializer(serializers.ModelSerializer, ValidateBasics):
     class Meta:
         model = LikeProduct
         fields = ('id', 'user', 'product', 'like')
-
-    def create(self, validated_data):
-        return LikeProduct.objects.create(**validated_data)
