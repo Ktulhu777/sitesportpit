@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from .models import Product, CategoryProduct, Review, ProductImages
-
+from .models import Product, CategoryProduct, Review, Order, ProductImages, LikeProduct
+from .validators import ValidateBasicsLike
 
 class ProductImagesSerializer(serializers.ModelSerializer):
     img = serializers.SerializerMethodField()
@@ -46,3 +46,12 @@ class ReviewSerializer(serializers.ModelSerializer):
         instance.changes = True
         instance.save()
         return instance
+
+
+class LikeProductSerializer(serializers.ModelSerializer, ValidateBasicsLike):
+    class Meta:
+        model = LikeProduct
+        fields = ('id', 'user', 'product', 'like')
+
+    def create(self, validated_data):
+        return LikeProduct.objects.create(**validated_data)

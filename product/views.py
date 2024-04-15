@@ -1,13 +1,12 @@
 from django.db.models import Count, Avg
-from rest_framework import generics, status
-from rest_framework.views import APIView
-
+from django_elasticsearch_dsl_drf.pagination import PageNumberPagination
 from .filters import ProductFilter
-from .models import Product, CategoryProduct, Review
-from .serializers import ProductSerializer, CategorySerializer, ReviewSerializer
-from rest_framework.pagination import PageNumberPagination
+from rest_framework import generics, status, mixins, viewsets
+from rest_framework.views import APIView
+from .models import Product, CategoryProduct, Review, LikeProduct
 from rest_framework.response import Response
 from .permissions import IsOwnerOrReadOnly
+from .serializers import ProductSerializer, CategorySerializer, ReviewSerializer, LikeProductSerializer
 
 
 class ProductPagination(PageNumberPagination):
@@ -107,3 +106,15 @@ class IDProduct(APIView):
 
         return Response({"product": ProductSerializer(product, many=True).data,
                          "review": ReviewSerializer(review, many=True).data})
+
+
+class LikeProductViews(mixins.CreateModelMixin,
+                       mixins.DestroyModelMixin,
+                       viewsets.GenericViewSet):
+    serializer_class = LikeProductSerializer
+    queryset = LikeProduct.objects.all()
+
+    def destroy(self, request, *args: tuple, **kwargs: dict) -> Response[dict, status]:
+        product = self.get_object()
+        product.delete()
+        return Response({"delete": 'лайк удален'}, status=status.HTTP_200_OK)
