@@ -1,8 +1,6 @@
 from decimal import Decimal
-
 from django.conf import settings
-
-from product.serializers import ProductSerializer
+from .serializers import CartSerializer
 from product.models import Product
 
 
@@ -24,10 +22,8 @@ class Cart:
 
         product_id = str(product["id"])
         if product_id not in self.cart:
-            self.cart[product_id] = {
-                "quantity": 0,
-                "price": str(product["price"])
-            }
+            self.cart[product_id] = {"quantity": 0}
+
         if overide_quantity:
             self.cart[product_id]["quantity"] = quantity
         else:
@@ -45,13 +41,13 @@ class Cart:
     def __iter__(self):
         """Перебираем товары в корзине и получаем продукты из базы данных."""
         product_ids = self.cart.keys()
-        products = Product.objects.filter(id__in=product_ids)
+        products = Product.published.filter(id__in=product_ids)
         cart = self.cart.copy()
         for product in products:
-            cart[str(product.id)]["product"] = ProductSerializer(product).data
+            cart[str(product.id)]["product"] = CartSerializer(product).data
+
         for item in cart.values():
-            item["price"] = Decimal(item["price"])
-            item["total_price"] = item["price"] * item["quantity"]
+            item["total_price"] = item["product"]["price"] * item["quantity"]
             yield item
 
     def __len__(self):
@@ -59,7 +55,16 @@ class Cart:
         return sum(item["quantity"] for item in self.cart.values())
 
     def get_total_price(self):
-        return sum(Decimal(item["price"]) * item["quantity"] for item in self.cart.values())
+        return sum(Decimal(item["product"]["price"]) * item["quantity"] for item in self.cart.values())
+
+    def get_total_discount_price(self):
+        summ = 0
+        for item in self.cart.values():
+            if item["product"]['discount_price']:
+                summ += Decimal(item["product"]['discount_price']) * item["quantity"]
+            else:
+                summ += Decimal(item["product"]['price']) * item["quantity"]
+        return summ
 
     def clear(self):
         # удаление корзины из сессии

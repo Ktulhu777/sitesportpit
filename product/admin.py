@@ -10,13 +10,14 @@ class GalleryInline(admin.TabularInline):
 
 @admin.register(Product)
 class ProductModel(admin.ModelAdmin):
-    fields = ('name', 'description', 'is_published', 'price', 'discount_price', 'category', 'quantity')
+    fields = ('name', 'slug', 'description', 'is_published', 'price', 'discount_price', 'category', 'quantity')
     ordering = ('-time_create', 'name',)
     # readonly_fields = ('product_img',)
     list_display = ('name', 'time_create', 'is_published', 'category')
     list_display_links = ('name',)
+    prepopulated_fields = {'slug': ('name',)}
     save_on_top = True
-    inlines = (GalleryInline, )
+    inlines = (GalleryInline,)
 
     # @admin.display(description="Изображение", ordering='description')
     # def product_img(self, product: Product):
@@ -29,7 +30,7 @@ class ProductModel(admin.ModelAdmin):
 @admin.register(CategoryProduct)
 class CategoryProductAdmin(admin.ModelAdmin):
     fields = ('cat_name', 'slug',)
-    prepopulated_fields = {"slug": ("cat_name",)}  # автоматически формирует слаг на основе cat_name
+    prepopulated_fields = {'slug': ('cat_name',)}  # автоматически формирует слаг на основе cat_name
 
 
 @admin.register(Review)
@@ -42,5 +43,3 @@ class ReviewAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Order)
-
-

@@ -4,7 +4,7 @@ from pathlib import Path
 import environ
 
 env = environ.Env()
-environ.Env.read_env(env_file=Path('./docker/env/.env.prod'))
+environ.Env.read_env(env_file=Path('./docker/env/.env.dev'))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,6 +27,9 @@ DEBUG = True
 ALLOWED_HOSTS = ['127.0.0.1']
 INTERNAL_IPS = ["127.0.0.1"]
 CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1', 'http://localhost']
+
+CART_SESSION_ID = 'cart'
+
 
 DOMAIN = ""
 # CACHES = {
