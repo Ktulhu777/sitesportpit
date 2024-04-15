@@ -71,9 +71,9 @@ class IDProduct(generics.ListAPIView):
     serializer_class = ProductSerializer
 
     def get_queryset(self):
-        pk = self.kwargs.get('id')
+        pk = self.kwargs.get('pk')
         return Product.published.annotate(_avg_rating=Avg('review__rating')
-                                          ).filter(pk=pk)
+                                          ).filter(id=pk)
 
 
 class LikeProductViews(CreateModelMixin, DestroyModelMixin, GenericViewSet):
