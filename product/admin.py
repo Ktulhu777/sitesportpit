@@ -10,7 +10,7 @@ class GalleryInline(admin.TabularInline):
 
 @admin.register(Product)
 class ProductModel(admin.ModelAdmin):
-    fields = ('name', 'description', 'is_published', 'price', 'discount_price', 'category', 'quantity')
+    fields = ('name', 'slug', 'description', 'is_published', 'price', 'discount_price', 'category', 'quantity')
     ordering = ('-time_create', 'name',)
     # readonly_fields = ('product_img',)
     list_display = ('name', 'time_create', 'is_published', 'category')
