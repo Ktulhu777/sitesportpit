@@ -11,7 +11,6 @@ class GalleryInline(admin.TabularInline):
 class ProductModel(admin.ModelAdmin):
     fields = ('name', 'slug', 'description', 'is_published', 'price', 'discount_price', 'category', 'quantity')
     ordering = ('-time_create', 'name',)
-    prepopulated_fields = {"slug": ('name',)}
     list_display = ('name', 'time_create', 'is_published', 'category')
     list_display_links = ('name',)
     prepopulated_fields = {'slug': ('name',)}
