@@ -22,6 +22,7 @@ class ProductAllView(generics.ListAPIView):
     queryset = Product.published.annotate(_avg_rating=Avg('review__rating')).all()
     serializer_class = ProductSerializer
     filterset_class = ProductFilter
+    pagination_class = ProductPagination
 
 
 class ProductDetailView(APIView, IsOwnerOrReadOnly):
