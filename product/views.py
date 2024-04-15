@@ -67,17 +67,13 @@ class CategoryProductView(generics.ListAPIView):
         return CategoryProduct.objects.filter(slug=slug)
 
 
-class IDProduct(APIView):
-    def get(self, request, pk):
-        product = Product.published.annotate(_avg_rating=Avg('review__rating')).filter(id=pk)
-        review = Review.objects.filter(product_review__id=pk).select_related('user')
+class IDProduct(generics.ListAPIView):
+    serializer_class = ProductSerializer
 
-        return Response(
-            {
-                'product': ProductSerializer(product, many=True).data,
-                'review': ReviewSerializer(review, many=True).data
-            }
-        )
+    def get_queryset(self):
+        pk = self.kwargs.get('id')
+        return Product.published.annotate(_avg_rating=Avg('review__rating')
+                                          ).filter(pk=pk)
 
 
 class LikeProductViews(CreateModelMixin, DestroyModelMixin, GenericViewSet):
