@@ -1,5 +1,5 @@
 from django.db.models import Count, Avg
-from django_elasticsearch_dsl_drf.pagination import PageNumberPagination
+from rest_framework.pagination import PageNumberPagination
 from .filters import ProductFilter
 from rest_framework import generics, status, mixins, viewsets
 from rest_framework.views import APIView
