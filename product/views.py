@@ -99,4 +99,10 @@ class CategoryProductView(generics.ListAPIView):
         return CategoryProduct.objects.filter(slug=slug)
 
 
+class IDProduct(APIView):
+    def get(self, request, pk):
+        product = Product.published.annotate(_avg_rating=Avg('review__rating')).filter(id=pk)
+        review = Review.objects.filter(product_review__id=pk).select_related('user')
 
+        return Response({"product": ProductSerializer(product, many=True).data,
+                         "review": ReviewSerializer(review, many=True).data})
