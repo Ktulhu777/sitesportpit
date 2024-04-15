@@ -15,6 +15,7 @@ class ProductModel(admin.ModelAdmin):
     # readonly_fields = ('product_img',)
     list_display = ('name', 'time_create', 'is_published', 'category')
     list_display_links = ('name',)
+    prepopulated_fields = {'slug': ('name',)}
     save_on_top = True
     inlines = (GalleryInline,)
 
@@ -29,7 +30,7 @@ class ProductModel(admin.ModelAdmin):
 @admin.register(CategoryProduct)
 class CategoryProductAdmin(admin.ModelAdmin):
     fields = ('cat_name', 'slug',)
-    prepopulated_fields = {"slug": ("cat_name",)}  # автоматически формирует слаг на основе cat_name
+    prepopulated_fields = {'slug': ('cat_name',)}  # автоматически формирует слаг на основе cat_name
 
 
 @admin.register(Review)

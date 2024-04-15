@@ -58,12 +58,6 @@ class Product(models.Model):
             return round((self.price - self.discount_price) / self.price * 100, 2)
         return None
 
-    def save(self, *args, **kwargs):
-        """Формирует автомачески slug для продукта"""
-        transliterated_name = unidecode(str(self.name))
-        self.slug = slugify(transliterated_name)
-        super().save(*args, **kwargs)
-
 
 class CategoryProduct(models.Model):
     """Основная модель категорий"""
