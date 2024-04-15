@@ -8,7 +8,7 @@ urlpatterns = [
     path('api/admin/', admin.site.urls),
     path('api/v1/', include('product.urls')),
     path('api/', include('users.urls')),
-    path('api/search/', include('search.urls')),
+    # path('api/search/', include('search.urls')),
     path('api/v1/', include('cart.urls')),
     path("api/__debug__/", include(debug_toolbar.urls)),
 ]
