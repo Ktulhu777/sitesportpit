@@ -4,7 +4,6 @@ from rest_framework.viewsets import GenericViewSet
 from .filters import ProductFilter
 from rest_framework import generics, status, mixins
 from rest_framework.mixins import CreateModelMixin, DestroyModelMixin
-from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import *
 
@@ -65,15 +64,6 @@ class CategoryProductView(generics.ListAPIView):
             return CategoryProduct.objects.annotate(total=Count('product')
                                                     ).filter(total__gt=0)
         return CategoryProduct.objects.filter(slug=slug)
-
-
-class IDProduct(generics.ListAPIView):
-    serializer_class = ProductSerializer
-
-    def get_queryset(self):
-        pk = self.kwargs.get('pk')
-        return Product.published.annotate(_avg_rating=Avg('review__rating')
-                                          ).filter(id=pk)
 
 
 class LikeProductViews(CreateModelMixin, DestroyModelMixin, GenericViewSet):
