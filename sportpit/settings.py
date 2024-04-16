@@ -188,7 +188,7 @@ REST_FRAMEWORK = {
 }
 
 DJOSER = {
-    'PASSWORD_RESET_CONFIRM_URL': 'account/password/reset/confirm/{uid}/{token}',
+    'PASSWORD_RESET_CONFIRM_URL': 'api/account/password/reset/confirm/{uid}/{token}',
     'SET_PASSWORD_RETYPE': True,
     'USER_CREATE_PASSWORD_RETYPE': True,
     'ACTIVATION_URL': 'account/activate/{uid}/{token}',  # перед activate нужен домен /activate/{uid}/{token}/

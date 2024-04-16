@@ -6,7 +6,7 @@ urlpatterns = [
     path('', include('djoser.urls')),
     path('', include('djoser.urls.jwt')),
 
-    path('account/activate/<uid>/<token>', views.ActivateUser.as_view(
+    path('api/account/activate/<uid>/<token>', views.ActivateUser.as_view(
         {'get': 'activation'}), name='activation'
          ),
 
