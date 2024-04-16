@@ -191,7 +191,7 @@ DJOSER = {
     'PASSWORD_RESET_CONFIRM_URL': 'account/password/reset/confirm/{uid}/{token}',
     'SET_PASSWORD_RETYPE': True,
     'USER_CREATE_PASSWORD_RETYPE': True,
-    'ACTIVATION_URL': 'account/activate/{uid}/{token}',  # перед activate нужен домен /activate/{uid}/{token}/
+    'ACTIVATION_URL': 'api/account/activate/{uid}/{token}',  # перед activate нужен домен /activate/{uid}/{token}/
     'TOKEN_MODEL': None,
     'SEND_ACTIVATION_EMAIL': True,
     'PASSWORD_RESET_SHOW_EMAIL_NOT_FOUND ': True,
