@@ -49,6 +49,14 @@ class ReviewProductChangesView(mixins.CreateModelMixin,
     serializer_class = ReviewSerializerUpdateAndCreateSerializer
     queryset = Review.objects.all()
 
+    def destroy(self, request, *args: tuple, **kwargs: dict) -> Response[dict, status]:
+        try:
+            product = self.get_object()
+            product.delete()
+            return Response({'delete': 'Отзыв удален'}, status=status.HTTP_200_OK)
+        except BaseException:
+            return Response({'delete': 'Отзыв не был удален'}, status=status.HTTP_404_NOT_FOUND)
+
 
 class CategoryProductView(generics.ListAPIView):
     """Класс категорий"""

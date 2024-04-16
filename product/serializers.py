@@ -51,7 +51,13 @@ class ReviewSerializerUpdateAndCreateSerializer(ReviewSerializer):
         return instance
 
 
-class LikeProductSerializer(serializers.ModelSerializer, ValidateBasics):
+class LikeProductSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
     class Meta:
         model = LikeProduct
         fields = ('id', 'user', 'product', 'like')
+
+    def create(self, validated_data):
+        validated_data['like'] = True
+        return LikeProduct.objects.create(**validated_data)
