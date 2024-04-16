@@ -64,12 +64,12 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'djoser',
+    'django_filters',
     'product.apps.ProductConfig',
     'users.apps.UsersConfig',
     'cart.apps.CartConfig',
     # 'search.apps.SearchConfig',
     'debug_toolbar',
-    'django_filters',
 ]
 
 MIDDLEWARE = [
