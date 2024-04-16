@@ -2,10 +2,12 @@ from django.db.models import Count, Avg
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import GenericViewSet
 from .filters import ProductFilter
-from rest_framework import generics, status, mixins
-from rest_framework.mixins import CreateModelMixin, DestroyModelMixin
+from rest_framework import generics, status
+from rest_framework.mixins import CreateModelMixin, UpdateModelMixin, DestroyModelMixin
 from rest_framework.response import Response
 from .serializers import *
+from .permissions import ReviewPermissions
+from rest_framework.exceptions import PermissionDenied
 
 
 class ProductPagination(PageNumberPagination):
@@ -42,18 +44,22 @@ class ReviewProductView(generics.ListAPIView):
                                          ).select_related('user')
 
 
-class ReviewProductChangesView(mixins.CreateModelMixin,
-                               mixins.UpdateModelMixin,
-                               mixins.DestroyModelMixin,
+class ReviewProductChangesView(CreateModelMixin,
+                               UpdateModelMixin,
+                               DestroyModelMixin,
                                GenericViewSet):
+
     serializer_class = ReviewSerializerUpdateAndCreateSerializer
     queryset = Review.objects.all()
+    permission_classes = ReviewPermissions,
 
     def destroy(self, request, *args: tuple, **kwargs: dict) -> Response[dict, status]:
         try:
             product = self.get_object()
             product.delete()
             return Response({'delete': 'Отзыв удален'}, status=status.HTTP_200_OK)
+        except PermissionDenied:
+            return Response({'delete': 'У вас недостаточно прав'}, status=status.HTTP_404_NOT_FOUND)
         except BaseException:
             return Response({'delete': 'Отзыв не был удален'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -71,6 +77,7 @@ class CategoryProductView(generics.ListAPIView):
         if not slug:
             return CategoryProduct.objects.annotate(total=Count('product')
                                                     ).filter(total__gt=0)
+
         return CategoryProduct.objects.filter(slug=slug)
 
 
