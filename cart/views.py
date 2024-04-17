@@ -1,7 +1,9 @@
-from rest_framework import status
+from rest_framework import status, mixins
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
+from rest_framework.viewsets import GenericViewSet
+from .models import Order
+from .serializers import OrderSerializer
 from cart.service import Cart
 
 
@@ -40,3 +42,11 @@ class CartAPI(APIView):
         return Response(
             {'message': 'Корзина обновлена'},
             status=status.HTTP_202_ACCEPTED)
+
+
+class OrderView(mixins.ListModelMixin, mixins.CreateModelMixin, GenericViewSet):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+
+    def get_queryset(self):
+        return Order.objects.filter(user=self.request.user)
