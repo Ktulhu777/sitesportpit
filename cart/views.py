@@ -48,8 +48,6 @@ class OrderView(mixins.ListModelMixin, mixins.CreateModelMixin, GenericViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
 
-    # def get_queryset(self):
-    #     # user = self.request.user
-    #     # if user:
-    #     #     return Order.objects.filter(user=user)
-    #     return Order.objects.all()
+    def get_queryset(self):
+        if self.request.user:
+            return Order.objects.filter(user=self.request.user)
