@@ -3,10 +3,10 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import GenericViewSet
 from .filters import ProductFilter
 from rest_framework import generics, status
-from rest_framework.mixins import CreateModelMixin, UpdateModelMixin, DestroyModelMixin
+from rest_framework.mixins import ListModelMixin, CreateModelMixin, UpdateModelMixin, DestroyModelMixin
 from rest_framework.response import Response
 from .serializers import *
-from .permissions import ReviewPermissions
+from .permissions import ReviewPermissions, LikePermissions
 from rest_framework.exceptions import PermissionDenied
 
 
@@ -59,7 +59,7 @@ class ReviewProductChangesView(CreateModelMixin,
             product.delete()
             return Response({'delete': 'Отзыв удален'}, status=status.HTTP_200_OK)
         except PermissionDenied:
-            return Response({'delete': 'У вас недостаточно прав'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'delete': 'У вас недостаточно прав'}, status=status.HTTP_403_FORBIDDEN)
         except BaseException:
             return Response({'delete': 'Отзыв не был удален'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -81,9 +81,13 @@ class CategoryProductView(generics.ListAPIView):
         return CategoryProduct.objects.filter(slug=slug)
 
 
-class LikeProductViews(CreateModelMixin, DestroyModelMixin, GenericViewSet):
+class LikeProductViews(ListModelMixin, CreateModelMixin, DestroyModelMixin, GenericViewSet):
     serializer_class = LikeProductSerializer
     queryset = LikeProduct.objects.all()
+    permission_classes = LikePermissions,
+
+    def get_queryset(self):
+        return LikeProduct.objects.filter(user=self.request.user)
 
     def destroy(self, request, *args: tuple, **kwargs: dict) -> Response[dict, status]:
         product = self.get_object()

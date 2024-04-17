@@ -13,3 +13,8 @@ class ReviewPermissions(permissions.BasePermission):
         elif request.method == 'POST' and request.user.is_authenticated:
             return True
         return request.user == obj.user
+
+
+class LikePermissions(permissions.BasePermission):
+    def has_permission(self, request, view):
+        return bool(request.user.is_authenticated)
