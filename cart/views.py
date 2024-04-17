@@ -4,7 +4,8 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
 from .models import Order
 from .serializers import OrderSerializer
-from cart.service import Cart
+from .service import Cart
+from .permissions import ReviewPermissions
 
 
 class CartAPI(APIView):
@@ -47,7 +48,7 @@ class CartAPI(APIView):
 class OrderView(mixins.ListModelMixin, mixins.CreateModelMixin, GenericViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
+    permission_classes = ReviewPermissions,
 
     def get_queryset(self):
-        if self.request.user.is_authenticated:
-            return Order.objects.filter(user=self.request.user)
+        return Order.objects.filter(user=self.request.user)

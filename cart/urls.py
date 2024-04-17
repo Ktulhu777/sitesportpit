@@ -6,6 +6,6 @@ order = SimpleRouter()
 order.register('', OrderView)
 
 urlpatterns = [
+    path('order/', include(order.urls), name='order'),
     path('cart/', CartAPI.as_view(), name='cart'),
-    path('order/', include(order.urls)),
 ]
