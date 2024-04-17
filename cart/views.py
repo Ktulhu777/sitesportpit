@@ -49,5 +49,5 @@ class OrderView(mixins.ListModelMixin, mixins.CreateModelMixin, GenericViewSet):
     serializer_class = OrderSerializer
 
     def get_queryset(self):
-        if self.request.user:
+        if self.request.user.is_authenticated:
             return Order.objects.filter(user=self.request.user)
