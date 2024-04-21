@@ -27,7 +27,7 @@ class ProductAllView(generics.ListAPIView):
 
 
 class ProductDetailView(generics.ListAPIView):
-    serializer_class = ProductSerializer
+    serializer_class = ProductDetailSerializer
 
     def get_queryset(self):
         product_slug = self.kwargs.get('product_slug')

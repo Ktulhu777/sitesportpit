@@ -141,15 +141,3 @@ class LikeProduct(models.Model):
 
     objects = models.Manager()
 
-# class Order(models.Model):
-#     name = models.CharField('Имя', max_length=30)
-#     surname = models.CharField('Фамилия', max_length=55)
-#     email = models.CharField('E-mail', max_length=255)
-#     phone = models.CharField('Телефон', max_length=12)
-#     city = models.CharField('Город', max_length=50)
-#     street = models.CharField('Улица', max_length=50)
-#     house = models.CharField('Номер дома', max_length=20)
-#     basket = models.TextField('Корзина')
-#
-#     def __str__(self):
-#         return f'{self.name} {self.surname} ({self.phone}) {self.email}'

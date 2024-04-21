@@ -8,7 +8,7 @@ class ProductImagesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductImages
-        fields = ('img', )
+        fields = ('img',)
 
     def get_img(self, obj):
         if obj.image:
@@ -21,7 +21,14 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ('id', 'name',  'category', 'price', 'discount_price', 'discount',   'images')
+        fields = ('id', 'name', 'category', 'price', 'discount_price', 'discount', 'images')
+
+
+class ProductDetailSerializer(ProductSerializer):
+    class Meta:
+        model = Product
+        fields = ('id', 'name', 'category', 'price', 'discount_price',
+                  'discount', 'quantity', 'time_create', 'images')
 
 
 class CategorySerializer(serializers.ModelSerializer):
