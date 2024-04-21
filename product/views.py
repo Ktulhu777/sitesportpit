@@ -19,8 +19,8 @@ class ProductPagination(PageNumberPagination):
 
 class ProductAllView(generics.ListAPIView):
     """Класс для просмотра списка товаров с пагинацией """
-    queryset = Product.published.annotate(_avg_rating=Avg('review__rating')
-                                          ).all()
+    queryset = Product.published.annotate(_avg_rating=Avg('review__rating')) \
+        .all().select_related('category').prefetch_related('images')
     serializer_class = ProductSerializer
     filterset_class = ProductFilter
     pagination_class = ProductPagination
@@ -48,7 +48,6 @@ class ReviewProductChangesView(CreateModelMixin,
                                UpdateModelMixin,
                                DestroyModelMixin,
                                GenericViewSet):
-
     serializer_class = ReviewSerializerUpdateAndCreateSerializer
     queryset = Review.objects.all()
     permission_classes = ReviewPermissions,
