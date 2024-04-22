@@ -55,9 +55,7 @@ class Cart:
         return sum(item['quantity'] for item in self.cart.values())
 
     def get_total_price(self):
-        return sum(
-            Decimal(item['product']['price']) * item['quantity'] for item in self.cart.values()
-        )
+        return sum(Decimal(item['product']['price']) * item['quantity'] for item in self.cart.values())
 
     def get_total_discount_price(self):
         summ = 0

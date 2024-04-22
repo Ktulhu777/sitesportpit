@@ -22,5 +22,6 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         read_only_fields = ('time_create_order', )
         fields = (
-            'user', 'city', 'street', 'house', 'quantity_product', 'product', 'price', 'time_create_order',
+            'user', 'city', 'street', 'house', 'quantity_product',
+            'product', 'price', 'time_create_order',
         )
