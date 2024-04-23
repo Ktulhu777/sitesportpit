@@ -25,3 +25,7 @@ class OrderSerializer(serializers.ModelSerializer):
             'user', 'city', 'street', 'house', 'quantity_product',
             'product', 'price', 'time_create_order',
         )
+
+    def create(self, validated_data):
+        validated_data['is_active'] = True
+        return Order.objects.create(**validated_data)

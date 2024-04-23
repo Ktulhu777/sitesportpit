@@ -12,6 +12,7 @@ class User(AbstractUser):
     phone = models.CharField('Номер телефона', blank=True, max_length=14)
     date_birth = models.DateField('Дата рождения', blank=True, null=True)
     city = models.CharField('Город', blank=True, max_length=50)
+    telegram_id = models.IntegerField(unique=True, blank=True, null=True)
 
     def __str__(self):
         return self.username

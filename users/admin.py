@@ -8,11 +8,10 @@ from .models import User
 @admin.register(User)
 class UserAdmin(UserAdmin):
     fieldsets = (
-        (None,
-         {
-             'fields': ('username', 'user_photo', 'first_name', 'last_name',
-                        'email', 'phone', 'date_birth', 'city', 'date_joined')
-         }),
+        (None, {'fields': (
+            'username', 'user_photo', 'first_name', 'last_name',
+            'email', 'phone', 'date_birth', 'city', 'date_joined', 'telegram_id'
+        )}),
     )
     ordering = ('username', 'date_birth', '-date_joined',)
     readonly_fields = ('date_joined',)
