@@ -24,7 +24,7 @@ class CartAPI(APIView):
             status=status.HTTP_200_OK
         )
 
-    def post(self, request, **kwargs):
+    def post(self, request):
         cart = Cart(request)
 
         product = request.data
@@ -43,7 +43,7 @@ class CartAPI(APIView):
             {'message': 'Корзина обновлена'},
             status=status.HTTP_202_ACCEPTED)
 
-    def delete(self, request, **kwargs):
+    def delete(self, request):
         cart = Cart(request)
 
         if 'remove' in request.data:

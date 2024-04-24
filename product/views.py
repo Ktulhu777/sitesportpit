@@ -3,7 +3,9 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import GenericViewSet
 from .filters import ProductFilter
 from rest_framework import generics, status
-from rest_framework.mixins import ListModelMixin, CreateModelMixin, UpdateModelMixin, DestroyModelMixin
+from rest_framework.mixins import (ListModelMixin, CreateModelMixin,
+                                   UpdateModelMixin, DestroyModelMixin)
+
 from rest_framework.response import Response
 from .serializers import *
 from .permissions import ReviewPermissions, LikePermissions
@@ -20,7 +22,7 @@ class ProductPagination(PageNumberPagination):
 class ProductAllView(generics.ListAPIView):
     """Класс для просмотра списка товаров с пагинацией """
     queryset = Product.published.annotate(_avg_rating=Avg('review__rating')) \
-        .all().select_related('category').prefetch_related('images')
+        .all().select_related('category')
     serializer_class = ProductSerializer
     filterset_class = ProductFilter
     pagination_class = ProductPagination
@@ -31,8 +33,9 @@ class ProductDetailView(generics.ListAPIView):
 
     def get_queryset(self):
         product_slug = self.kwargs.get('product_slug')
-        return Product.published.annotate(_avg_rating=Avg('review__rating')
-                                          ).filter(slug=product_slug)
+        product = Product.published.filter(slug=product_slug)
+        product_avg_rating = product.annotate(_avg_rating=Avg('review__rating'))
+        return product_avg_rating.select_related('category')
 
 
 class ReviewProductView(generics.ListAPIView):
@@ -40,14 +43,15 @@ class ReviewProductView(generics.ListAPIView):
 
     def get_queryset(self):
         if self.kwargs.get('product_slug'):
-            return Review.objects.filter(product_review__slug=self.kwargs.get('product_slug')
-                                         ).select_related('user')
+            product_slug = self.kwargs.get('product_slug')
+            review_product = Review.objects.filter(product_review__slug=product_slug)
+
+            return review_product.select_related('user')
 
 
-class ReviewProductChangesView(CreateModelMixin,
-                               UpdateModelMixin,
-                               DestroyModelMixin,
-                               GenericViewSet):
+class ReviewProductChangesView(CreateModelMixin, UpdateModelMixin,
+                               DestroyModelMixin, GenericViewSet):
+
     serializer_class = ReviewSerializerUpdateAndCreateSerializer
     queryset = Review.objects.all()
     permission_classes = ReviewPermissions,
@@ -56,11 +60,24 @@ class ReviewProductChangesView(CreateModelMixin,
         try:
             product = self.get_object()
             product.delete()
-            return Response({'delete': 'Отзыв удален'}, status=status.HTTP_200_OK)
+
+            return Response(
+                {'delete': 'Отзыв удален'},
+                status=status.HTTP_200_OK
+            )
+
         except PermissionDenied:
-            return Response({'delete': 'У вас недостаточно прав'}, status=status.HTTP_403_FORBIDDEN)
+
+            return Response(
+                {'delete': 'У вас недостаточно прав'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
         except BaseException:
-            return Response({'delete': 'Отзыв не был удален'}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                {'delete': 'Отзыв не был удален'},
+                status=status.HTTP_404_NOT_FOUND
+            )
 
 
 class CategoryProductView(generics.ListAPIView):
@@ -74,13 +91,15 @@ class CategoryProductView(generics.ListAPIView):
         """
         slug = self.kwargs.get('slug')
         if not slug:
-            return CategoryProduct.objects.annotate(total=Count('product')
-                                                    ).filter(total__gt=0)
+            category_count = CategoryProduct.objects.annotate(total=Count('product'))
+            return category_count.filter(total__gt=0)
 
         return CategoryProduct.objects.filter(slug=slug)
 
 
-class LikeProductViews(ListModelMixin, CreateModelMixin, DestroyModelMixin, GenericViewSet):
+class LikeProductViews(ListModelMixin, CreateModelMixin,
+                       DestroyModelMixin, GenericViewSet):
+
     serializer_class = LikeProductSerializer
     queryset = LikeProduct.objects.all()
     permission_classes = LikePermissions,
