@@ -100,8 +100,8 @@ async def get_register(message):
 
 
 def send_email_user(success: SuccessEmail):
-    return send_mail('Привязка профиля к боту!', success.get_letter(), "kalaitanov93@yandex.ru",
-                     [success.email], fail_silently=False)
+    return send_mail('Привязка профиля к боту!', success.get_letter(), from_email=None,
+                     recipient_list=[success.email], fail_silently=False)
 
 
 async def main() -> None:
