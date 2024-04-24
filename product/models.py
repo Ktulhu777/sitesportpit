@@ -140,4 +140,3 @@ class LikeProduct(models.Model):
     like = models.BooleanField('Лайк', default=False)
 
     objects = models.Manager()
-

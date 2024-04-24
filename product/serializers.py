@@ -21,14 +21,19 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ('id', 'name', 'slug','category', 'price', 'discount_price', 'discount', 'images')
+        fields = (
+            'id', 'name', 'slug', 'category', 'avg_rating',
+            'price', 'discount_price', 'discount', 'images'
+        )
 
 
 class ProductDetailSerializer(ProductSerializer):
     class Meta:
         model = Product
-        fields = ('id', 'name', 'slug', 'category', 'price', 'discount_price',
-                  'discount', 'quantity', 'time_create', 'images')
+        fields = (
+            'id', 'name', 'slug', 'category', 'avg_rating', 'price',
+            'discount_price', 'discount', 'quantity',  'images'
+        )
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -42,7 +47,10 @@ class ReviewSerializer(serializers.ModelSerializer, ValidateBasics):
 
     class Meta:
         model = Review
-        fields = ('id', 'user', 'review', 'product_review', 'create_date', 'changes', 'rating')
+        fields = (
+            'id', 'user', 'review', 'product_review',
+            'create_date', 'changes', 'rating'
+        )
 
 
 class ReviewSerializerUpdateAndCreateSerializer(ReviewSerializer):
