@@ -10,6 +10,7 @@ urlpatterns = [
     path('api/', include('users.urls')),
     # path('api/search/', include('search.urls')),
     path('api/v1/', include('cart.urls')),
+    path('api/', include('telegrambot.urls')),
     path("api/__debug__/", include(debug_toolbar.urls)),
 ]
 
