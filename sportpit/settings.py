@@ -18,6 +18,8 @@ SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = int(env('DEBUG', default=1))
+os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
+TOKENBOT = env('TOKENBOT')
 
 ALLOWED_HOSTS = env('ALLOWED_HOSTS').split()
 DOMAIN = env('DOMAIN')
@@ -65,6 +67,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'djoser',
     'django_filters',
+    'telegrambot.apps.TelegrambotConfig',
     'product.apps.ProductConfig',
     'users.apps.UsersConfig',
     'cart.apps.CartConfig',

@@ -1,6 +1,6 @@
 import asyncio
 import functools
-
+from django.conf import settings
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
@@ -16,7 +16,7 @@ from .statebot import Form
 from concurrent.futures import ThreadPoolExecutor
 from .validators import EmailValidators
 
-TOKEN = '7084563979:AAGGfPEw5IOd0rT0F4yLJGq34DhmqLBZXuQ'
+TOKEN = settings.TOKENBOT
 bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 
 dp = Dispatcher()
