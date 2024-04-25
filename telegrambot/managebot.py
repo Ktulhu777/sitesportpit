@@ -1,21 +1,15 @@
-import asyncio
-import functools
-from smtplib import SMTPRecipientsRefused
 from django.conf import settings
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram import types
 from aiogram.filters import Command
-from aiogram.fsm.context import FSMContext
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from aiogram.types.reply_keyboard_remove import ReplyKeyboardRemove
 from asgiref.sync import sync_to_async
 from cart.models import Order
 from django.core.mail import send_mail
 from .help_text import SuccessEmail
-from .statebot import Form
-from concurrent.futures import ThreadPoolExecutor
-from aiogram.types.reply_keyboard_remove import ReplyKeyboardRemove
 
 
 TOKEN = settings.TOKENBOT
@@ -77,31 +71,15 @@ def profile_markup():
 
 
 @dp.message(lambda message: message.text == "У меня есть профиль на сайте")
-async def get_profile(message: types.Message, state: FSMContext) -> None:
-    await message.answer(text='Напишите свой привязанный к профилю Email-адрес',
+async def get_profile(message: types.Message) -> None:
+    await message.answer(text=f'Ваш ID: {message.from_user.id}. Введите свой ID в поле telegram_id.'
+                              'https://project-pit.ru/api/users/me/',
                          reply_markup=ReplyKeyboardRemove())
-    await state.set_state(Form.email)
-
-
-@dp.message(Form.email)
-async def process_telegram_id(message: types.Message, state: FSMContext) -> None:
-    await state.update_data(email=message.text)
-    success = SuccessEmail(email=message.text,
-                           nickname=message.from_user.username,
-                           user_id=message.from_user.id)
-    with ThreadPoolExecutor() as pool:
-        loop = asyncio.get_running_loop()
-        one_task = loop.run_in_executor(pool, functools.partial(send_email_user, success))
-        try:
-            await asyncio.gather(one_task)
-            await message.answer(text=f'Мы отправили вам письмо на email {message.text}')
-        except SMTPRecipientsRefused:
-            await message.answer(text=f'Вы ввели неправильный Email')
 
 
 @dp.message(lambda message: message.text == "Нет профиля на сайте")
 async def get_register(message):
-    await message.answer(text='Вы можете зарегистроваться по ссылке \nhttp://127.0.0.1:8000/api/users/')
+    await message.answer(text='Вы можете зарегистрироваться по ссылке \nhttp://127.0.0.1:8000/api/users/')
 
 
 def send_email_user(success: SuccessEmail):
