@@ -7,5 +7,4 @@ class Command(BaseCommand):
     help = 'Телеграм бот'
 
     def handle(self, *args, **options):
-        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
         asyncio.run(main())

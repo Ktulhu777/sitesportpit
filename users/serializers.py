@@ -12,7 +12,7 @@ class ProfileSerializer(serializers.ModelSerializer, ValidateBasics):
         model = get_user_model()
         fields = (
             'id', 'user_photo', 'username', 'first_name',
-            'last_name', 'email', 'date_birth', 'city', 'phone'
+            'last_name', 'email', 'date_birth', 'city', 'phone', 'telegram_id'
         )
 
         read_only_fields = ('id', 'username', 'email')
