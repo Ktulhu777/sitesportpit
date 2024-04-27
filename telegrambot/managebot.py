@@ -24,8 +24,7 @@ dp = Dispatcher()
 @dp.message(Command('start'))
 async def start(message: types.Message):
     inline_markup = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text='URL сайта', url='project-pit.ru/'),
-         InlineKeyboardButton(text='Мои заказы')]])
+        [InlineKeyboardButton(text='URL сайта', url='project-pit.ru/')]])
     await bot.send_message(chat_id=message.from_user.id,
                            text=f'Здравствуйте {message.from_user.username}!\n{description}',
                            reply_markup=inline_markup)
@@ -88,10 +87,10 @@ async def get_profile(message: types.Message) -> None:
 
 
 @dp.message(lambda message: message.text == "Нет профиля на сайте")
-async def get_register(message):
+async def get_register(message: types.Message):
     await message.answer(text='Вы можете зарегистроваться по ссылке \nproject-pit.ru/api/users/me/')
 
 
 async def main() -> None:
     dp.message.register(bot)
-    await dp.start_polling(bot, skip_updates=True)
+    await dp.start_polling(bot)
