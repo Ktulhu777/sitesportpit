@@ -8,19 +8,27 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.types.reply_keyboard_remove import ReplyKeyboardRemove
 from asgiref.sync import sync_to_async
 from cart.models import Order
-from django.core.mail import send_mail
-from .help_text import SuccessEmail
+from aiogram.types.inline_keyboard_button import InlineKeyboardButton
+from aiogram.types.inline_keyboard_markup import InlineKeyboardMarkup
 
 
 TOKEN = settings.TOKENBOT
 bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+
+description = types.bot_description.BotDescription(
+    description="""Я бот разработанный для навигации по сайту ProjectPit.ru. Чем я могу Вам помочь?""")
 
 dp = Dispatcher()
 
 
 @dp.message(Command('start'))
 async def start(message: types.Message):
-    await bot.send_message(chat_id=message.from_user.id, text='Привет ты написал в группу')
+    inline_markup = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text='URL сайта', url='project-pit.ru/'),
+         InlineKeyboardButton(text='Мои заказы')]])
+    await bot.send_message(chat_id=message.from_user.id,
+                           text=f'Здравствуйте {message.from_user.username}!\n{description}',
+                           reply_markup=inline_markup)
 
 
 @dp.message(Command('location'))
@@ -40,13 +48,15 @@ async def get_order_user(message: types.Message):
             if counter == 10:
                 await message.answer(
                     text=f"Список получится очень большим, остальное можете посмотреть на сайте. \n"
-                         f"Более подробно тут http://127.0.0.1:8000/api/v1/order/"
+                         f"Более подробно тут project-pit.ru/api/v1/order/",
+                    reply_markup=ReplyKeyboardRemove()
                 )
                 break
             await message.answer(
                 text=f"Товар: {i.product}; \nЦена: {i.price}; \n"
                      f"Количество продуктов: {i.quantity_product}; \n"
-                     f"Время заказа: {i.time_create_order}"
+                     f"Время заказа: {i.time_create_order} \n"
+                     f"Статус заказа: {{{'Активен' if i.is_active else 'Неактивен'}}}"
             )
             counter += 1
     else:
@@ -57,7 +67,7 @@ async def get_order_user(message: types.Message):
 async def open_profile_user(message):
     """Команда для перехода пользователя на свой профиль сайта"""
     await bot.send_message(message.chat.id,
-                           text='https://project-pit.ru/api/users/me/')
+                           text='project-pit.ru/api/users/me/')
 
 
 def profile_markup():
@@ -72,19 +82,14 @@ def profile_markup():
 
 @dp.message(lambda message: message.text == "У меня есть профиль на сайте")
 async def get_profile(message: types.Message) -> None:
-    await message.answer(text=f'Ваш ID: {message.from_user.id}. Введите свой ID в поле telegram_id.'
-                              'https://project-pit.ru/api/users/me/',
+    await message.answer(text=f'Ваш ID: {message.from_user.id}. Введите свой ID в поле telegram_id. \n'
+                              'project-pit.ru/api/users/me/',
                          reply_markup=ReplyKeyboardRemove())
 
 
 @dp.message(lambda message: message.text == "Нет профиля на сайте")
 async def get_register(message):
-    await message.answer(text='Вы можете зарегистрироваться по ссылке \nhttp://127.0.0.1:8000/api/users/')
-
-
-def send_email_user(success: SuccessEmail):
-    return send_mail('Привязка профиля к боту!', success.get_letter(), from_email=None,
-                     recipient_list=[success.email], fail_silently=False)
+    await message.answer(text='Вы можете зарегистроваться по ссылке \nproject-pit.ru/api/users/me/')
 
 
 async def main() -> None:

@@ -16,7 +16,7 @@ class Order(models.Model):
 
     price = models.IntegerField('Общая сумма товаров')
     time_create_order = models.DateTimeField(auto_now_add=True)
-    is_active = models.BooleanField('Статус заказа', default=False)
+    is_active = models.BooleanField('Статус заказа', default=True)
 
     objects = models.Manager()
 
