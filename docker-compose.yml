@@ -1,12 +1,11 @@
 version: "3.10"
 
 volumes:
-  pgdata:
-  static:
-  media:
+  pgdata_project2:
+  static_project2:
+  media_project2:
 
 services:
-
   django:
     build:
       context: .
@@ -17,12 +16,11 @@ services:
       - docker/env/.env.prod
     volumes:
       - ./:/app
-      - static:/app/static
-      - media:/app/media
+      - static_project2:/app/static
+      - media_project2:/app/media
     depends_on:
       - postgres_project2
       - redis_project2
-#      - elasticsearch
     command: sh -c "python manage.py collectstatic --no-input &&
                     python manage.py makemigrations &&
                     python manage.py migrate && 
@@ -37,8 +35,8 @@ services:
       - "81:80"
       - "444:443"
     volumes:
-      - static:/app/static
-      - media:/app/media
+      - static_project2:/app/static
+      - media_project2:/app/media
       - ./docker/nginx/prod/:/etc/nginx/conf.d:ro
       - ./docker/certbot/conf:/etc/letsencrypt:ro
       - ./docker/certbot/www:/var/www/certbot:ro
@@ -47,16 +45,16 @@ services:
     depends_on:
       - django
 
-  postgres:
+  postgres_project2:
     image: postgres:alpine
     container_name: postgres_project2
     restart: always
     env_file:
       - docker/env/.env.prod
     volumes:
-      - pgdata:/var/lib/postgresql/data/
+      - pgdata_project2:/var/lib/postgresql/data/
 
-  redis:
+  redis_project2:
     image: redis:alpine
     container_name: redis_project2
     env_file:
@@ -67,30 +65,11 @@ services:
       - ./docker/redis/data:/data
 
   certbot:
-      image: certbot/certbot
-      container_name: certbot_project2
-      volumes:
-          - ./docker/certbot/conf:/etc/letsencrypt:rw
-          - ./docker/certbot/www:/var/www/certbot:rw
-      # command: certonly --webroot --webroot-path=/var/www/certbot/ --email kalaytanov93@gmail.com --agree-tos --no-eff-email -d project-pit.ru -d www.project-pit.ru
-      depends_on:
-        - nginx_project2
-
-#  elasticsearch:
-#    container_name: elasticsearch
-#    image: elasticsearch:7.17.19
-#    environment:
-#      - discovery.type=single-node
-#      - cluster.name=es-docker
-#      - node.name=node1
-#      - bootstrap.memory_lock=true
-##      - "ES_JAVA_OPTS=-Xmx512m -Xms512"
-##    deploy:
-##      resources:
-##        limits:
-##          memory: 2G
-#    restart: always
-#    ports:
-#      - "9200:9200"
-#    volumes:
-#      - ./docker/elasticsearch/:/elastic
+    image: certbot/certbot
+    container_name: certbot_project2
+    volumes:
+      - ./docker/certbot/conf:/etc/letsencrypt:rw
+      - ./docker/certbot/www:/var/www/certbot:rw
+    # command: certonly --webroot --webroot-path=/var/www/certbot/ --email kalaytanov93@gmail.com --agree-tos --no-eff-email -d project-pit.ru -d www.project-pit.ru
+    depends_on:
+      - nginx
