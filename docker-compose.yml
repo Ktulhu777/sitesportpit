@@ -11,7 +11,7 @@ services:
     build:
       context: .
     ports:
-      - '8000:8000'
+      - '8001:8001'
     container_name: django_project2
     env_file:
       - docker/env/.env.prod
@@ -26,7 +26,7 @@ services:
     command: sh -c "python manage.py collectstatic --no-input &&
                     python manage.py makemigrations &&
                     python manage.py migrate &&
-                    gunicorn --workers=4 --reload --max-requests=1000 sportpit.wsgi -b 0.0.0.0:8000"
+                    gunicorn --workers=4 --reload --max-requests=1000 sportpit.wsgi -b 0.0.0.0:8001"
 
   nginx:
     container_name: nginx_project2
@@ -34,8 +34,8 @@ services:
     image: nginx:stable-alpine
     restart: always
     ports:
-      - "80:80"
-      - "443:443"
+      - "81:81"
+      - "444:444"
     volumes:
       - static:/app/static
       - media:/app/media
