@@ -21,7 +21,11 @@ DEBUG = int(env('DEBUG', default=1))
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 TOKENBOT = env('TOKENBOT')
 
-ALLOWED_HOSTS = env('ALLOWED_HOSTS').split()
+ALLOWED_HOSTS = [
+    'project-pit.ru',
+    'www.project-pit.ru',
+]
+# ALLOWED_HOSTS = env('ALLOWED_HOSTS').split()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 DOMAIN = env('DOMAIN')
 
