@@ -11,7 +11,7 @@ services:
     build:
       context: .
     ports:
-      - '8001:8000'
+      - '8000:8000'
     container_name: django_pit
     env_file:
       - docker/env/.env.prod
