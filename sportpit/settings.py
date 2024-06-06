@@ -24,7 +24,9 @@ TOKENBOT = env('TOKENBOT')
 ALLOWED_HOSTS = [
     'project-pit.ru',
     'www.project-pit.ru',
-    '31.129.102.58'
+    '31.129.102.58',
+    'localhost',
+    '127.0.0.1'
 ]
 # ALLOWED_HOSTS = env('ALLOWED_HOSTS').split()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
